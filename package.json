@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@polkadot/api": "^10.9.1",
+    "@polkadot/extension-dapp": "^0.46.5",
+    "@polkadot/extension-inject": "^0.46.5",
     "@reduxjs/toolkit": "^1.9.5",
     "@thirdweb-dev/react": "^3.14.9",
     "@thirdweb-dev/sdk": "^3.10.29",
