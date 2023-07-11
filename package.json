@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@moonbeam-network/api-augment": "^0.2400.0",
     "@polkadot/api": "^10.9.1",
     "@polkadot/extension-dapp": "^0.46.5",
     "@polkadot/extension-inject": "^0.46.5",
+    "@polkadot/types": "^10.9.1",
+    "@polkadot/util": "^12.3.2",
+    "@polkadot/util-crypto": "^12.3.2",
     "@reduxjs/toolkit": "^1.9.5",
     "@thirdweb-dev/react": "^3.14.9",
     "@thirdweb-dev/sdk": "^3.10.29",
