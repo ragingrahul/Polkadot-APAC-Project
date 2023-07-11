@@ -1,11 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  openCreateModal: false,
+};
 
 export const defaultSlice = createSlice({
   name: "default",
   initialState,
   reducers: {
-    // Here we will be adding reducers
+    setOpenCreateModal: (state, action) => {
+      state.openCreateModal = action.payload;
+    },
   },
 });
+
+export const { setOpenCreateModal } = defaultSlice.actions;

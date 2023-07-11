@@ -5,9 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { useDispatch } from "react-redux";
+import { setOpenCreateModal } from "@/redux/defaultSlice";
 
 const ConnectSection = () => {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleConnect = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      dispatch(setOpenCreateModal(true));
+    }, 1000);
+  };
+
   return (
     <div className="relative bg-black">
       {/* Connect Section */}
@@ -36,7 +48,7 @@ const ConnectSection = () => {
         <Button
           disabled={isLoading}
           className="bg-white text-black hover:bg-gray-300 hover:text-black"
-          onClick={() => setIsLoading(true)}
+          onClick={handleConnect}
         >
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Connnect

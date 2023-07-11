@@ -3,6 +3,6 @@ import { defaultSlice } from "./defaultSlice";
 
 export const store = configureStore({
   reducer: {
-    defaultSlice: defaultSlice.reducer,
+    default: defaultSlice.reducer,
   },
 });
