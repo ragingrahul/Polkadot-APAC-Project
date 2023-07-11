@@ -7,10 +7,13 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { setOpenCreateModal } from "@/redux/defaultSlice";
+import { Input } from "@/components/ui/input";
+import { Wallet2 } from "lucide-react";
 
 const ConnectSection = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [email, setEmail] = React.useState();
 
   const handleConnect = () => {
     setIsLoading(true);
@@ -42,17 +45,55 @@ const ConnectSection = () => {
             Connect a wallet
           </h1>
           <p className="text-sm text-muted-foreground">
-            Connect your Polkadot wallet to get started.
+            Enter your email below to get started.
           </p>
+        </div>
+
+        {/* Connect with Email */}
+        <div className="flex flex-col space-y-2 mt-5">
+          <Input
+            type="text"
+            placeholder="name@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="ring-offset-gray-900 text-black focus-visible:ring-gray-600 border-gray-500 bg-white w-[300px]"
+          />
         </div>
         <Button
           disabled={isLoading}
-          className="bg-white text-black hover:bg-gray-300 hover:text-black"
+          className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
           onClick={handleConnect}
         >
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-          Connnect
+          Sign In with Email
         </Button>
+
+        <div className="relative  w-[300px]">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-muted-foreground" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-black px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        {/* Connect with Wallet */}
+        <Button
+          disabled={isLoading}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
+          )}
+          onClick={handleConnect}
+        >
+          {(isLoading && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
+          Connect
+        </Button>
+
         <p className="px-8 text-center text-sm text-muted-foreground">
           By connecting your wallet, you agree to our{" "}
           <Link
