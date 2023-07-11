@@ -2,7 +2,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { format } from "date-fns";
+import { format, subYears } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ const CreateProfile = () => {
   const [date, setDate] = React.useState();
   const [avatar, setAvatar] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
+  const maxDate = subYears(new Date(), 18);
 
   return (
     <div className="bg-black relative flex-col justify-center items-center flex">
@@ -88,10 +89,28 @@ const CreateProfile = () => {
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
               <Calendar
+                classNames={{
+                  cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-white/5 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                  caption_label: "hidden",
+                  caption_dropdowns:
+                    "flex w-full items-center justify-center space-x-2",
+                }}
                 mode="single"
                 selected={date}
+                fromDate={subYears(new Date(), 100)}
+                toDate={maxDate}
+                captionLayout="dropdown"
                 onSelect={setDate}
+                defaultMonth={
+                  new Date(
+                    date?.getFullYear() ?? maxDate.getFullYear(),
+                    date?.getMonth() ?? maxDate.getMonth(),
+                    1
+                  )
+                }
+                required
                 initialFocus
+                className="border rounded-md border-white/10"
               />
             </PopoverContent>
           </Popover>
@@ -147,7 +166,7 @@ const CreateProfile = () => {
         {/* Create Button */}
         <Button
           disabled={isLoading}
-          className="bg-white text-black hover:bg-gray-300 hover:text-black my-5"
+          className="bg-white text-black hover:bg-gray-300 hover:text-black my-7"
           onClick={() => setIsLoading(true)}
         >
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
