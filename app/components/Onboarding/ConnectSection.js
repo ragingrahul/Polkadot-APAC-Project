@@ -6,7 +6,11 @@ import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
-import { setOpenCreateModal } from "@/redux/defaultSlice";
+import {
+  initiateOnboarding,
+  setEvmAddress,
+  setPolkadotAddress,
+} from "@/redux/defaultSlice";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
 
@@ -19,7 +23,11 @@ const ConnectSection = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      dispatch(setOpenCreateModal(true));
+      dispatch(initiateOnboarding());
+      dispatch(
+        setPolkadotAddress("15gFi9nN4SR6pfPN8wJ9DvnMRTPvcS1Z5J8znFLSkr2paspZ")
+      );
+      dispatch(setEvmAddress("0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC"));
     }, 1000);
   };
 

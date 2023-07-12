@@ -3,7 +3,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { format, subYears } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronLeft } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { useDispatch } from "react-redux";
+import { previousOnboardingStep } from "@/redux/defaultSlice";
 
 const CreateProfile = () => {
   const [name, setName] = React.useState();
@@ -25,6 +27,7 @@ const CreateProfile = () => {
   const [avatar, setAvatar] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
   const maxDate = subYears(new Date(), 18);
+  const dispatch = useDispatch();
 
   return (
     <div className="bg-black relative flex-col justify-center items-center flex">
@@ -35,10 +38,10 @@ const CreateProfile = () => {
             href="#"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "absolute right-4 top-4 md:right-8 md:top-8 text-white hover:bg-black hover:text-gray-300"
+              "absolute right-8 top-8 text-white hover:bg-black hover:text-gray-300 w-[120px]"
             )}
           >
-            Create
+            Step 3 of 3
           </Link>
         </div>
 
@@ -163,15 +166,31 @@ const CreateProfile = () => {
           </p>
         </div>
 
-        {/* Create Button */}
-        <Button
-          disabled={isLoading}
-          className="bg-white text-black hover:bg-gray-300 hover:text-black my-7"
-          onClick={() => setIsLoading(true)}
-        >
-          {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-          Create
-        </Button>
+        {/* Create Button & Previous Button */}
+        <div className="flex justify-between mt-7">
+          <Button
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "bg-white text-black hover:bg-gray-300 hover:text-black w-[190px] relative"
+            )}
+            onClick={() => {
+              dispatch(previousOnboardingStep());
+            }}
+          >
+            <ChevronLeft className="absolute left-3 w-4" />
+            Previous
+          </Button>
+          <Button
+            disabled={isLoading}
+            className="bg-white text-black hover:bg-gray-300 hover:text-black w-[190px]"
+            onClick={() => setIsLoading(true)}
+          >
+            {isLoading && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Create
+          </Button>
+        </div>
       </div>
     </div>
   );
