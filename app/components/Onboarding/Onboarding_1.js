@@ -7,7 +7,6 @@ import PolkadotAddress from "./PolkadotAddress";
 import EVMAddress from "./EvmAddress";
 
 const Onboarding_1 = () => {
-  const openCreateModal = useSelector((state) => state.default.openCreateModal);
   const currentStep = useSelector((state) => state.default.onBoardingStep);
   return (
     <div className="w-screen h-screen grid grid-cols-2 grid-rows-1">
