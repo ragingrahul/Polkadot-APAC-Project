@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import NavButton from "./NavButton";
 
 const polkadotAddress = "15gFi9nN4SR6pfPN8wJ9DvnMRTPvcS1Z5J8znFLSkr2paspZ";
 const evmAddress = "0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC";
@@ -44,26 +45,20 @@ const Navbar = () => {
           </div>
 
           {/* Feed Button */}
-          <Button className="bg-[color:var(--feed-foreground)] hover:bg-[color:var(--feed-foreground)]">
-            <Activity className="w-4 mr-2" /> Feed
-          </Button>
+          <NavButton name="Feed" icon={Activity} isActive={true} />
 
           {/* Post Button */}
-          <Button className="bg-[color:var(--feed)] hover:bg-[color:var(--feed-foreground)]">
-            <Repeat2 className="w-4 mr-2" /> Posts
-          </Button>
+          <NavButton name="Posts" icon={Repeat2} isActive={false} />
 
           {/* Videos Button */}
-          <Button className="bg-[color:var(--feed)] hover:bg-[color:var(--feed-foreground)]">
-            <Play className="w-4 mr-2" /> Videos
-          </Button>
+          <NavButton name="Videos" icon={Play} isActive={false} />
 
           {/* Search Bar */}
           <div className="flex h-full items-center">
             <Search color="white" className="w-12 ml-10" />
             <Input
               className="ml-5 w-[400px] bg-[color:var(--feed-foreground)] border-none text-white focus-visible:ring-1 "
-              placeHolder="Search"
+              placeholder="Search"
             ></Input>
           </div>
         </div>
