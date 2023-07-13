@@ -4,6 +4,7 @@ const initialState = {
   polkadotAddress: null,
   evmAddress: null,
   onBoardingStep: 0,
+  web3auth:null,
 };
 
 export const defaultSlice = createSlice({
@@ -27,12 +28,16 @@ export const defaultSlice = createSlice({
       if (state.onBoardingStep < 3)
         state.onBoardingStep = state.onBoardingStep + 1;
     },
+    setWeb3Auth:(state,action)=>{
+      state.web3auth=action.payload;
+    }
   },
 });
 
 export const {
   setPolkadotAddress,
   setEvmAddress,
+  setWeb3Auth,
   initiateOnboarding,
   previousOnboardingStep,
   nextOnboardingStep,
