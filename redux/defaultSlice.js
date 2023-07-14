@@ -5,6 +5,8 @@ const initialState = {
   evmAddress: null,
   onBoardingStep: 0,
   currentTab: "feed",
+  web3Auth: null,
+  provider: null,
 };
 
 export const defaultSlice = createSlice({
@@ -16,6 +18,12 @@ export const defaultSlice = createSlice({
     },
     setEvmAddress: (state, action) => {
       state.evmAddress = action.payload;
+    },
+    setWeb3Auth: (state, action) => {
+      state.web3Auth = action.payload;
+    },
+    setProvider: (state, action) => {
+      state.provider = action.payload;
     },
     initiateOnboarding: (state) => {
       state.onBoardingStep = 1;
@@ -37,6 +45,8 @@ export const defaultSlice = createSlice({
 export const {
   setPolkadotAddress,
   setEvmAddress,
+  setWeb3Auth,
+  setProvider,
   initiateOnboarding,
   previousOnboardingStep,
   nextOnboardingStep,
