@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
 import Navbar from "../components/Feed/Navbar";
 import Sidebar from "../components/Feed/Sidebar";
 import Playground from "../components/Playground/Playground";
+import OtherMenu from "../components/OtherMenu/OtherMenu";
 
 const page = () => {
   return (
@@ -9,6 +11,7 @@ const page = () => {
       <Playground />
       <Sidebar />
       <Navbar />
+      <OtherMenu />
     </div>
   );
 };
