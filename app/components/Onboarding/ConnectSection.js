@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
@@ -13,18 +13,8 @@ import {
 } from "@/redux/defaultSlice";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { CHAIN_NAMESPACES,WALLET_ADAPTERS } from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { CommonPrivateKeyProvider } from "@web3auth/base-provider";
-import RPC from '../../util/polkadotRPC'
-
-const clientId="BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
 
 const ConnectSection = () => {
-  const [web3auth,setWeb3auth]=React.useState(null)
-  const [provider,setProvider]=React.useState(null)
-  const [loggedIn,setLoggedIn]=React.useState(false)
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(false);
   const [email, setEmail] = React.useState();
@@ -40,71 +30,6 @@ const ConnectSection = () => {
       dispatch(setEvmAddress("0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC"));
     }, 1000);
   };
-
-  // Initializing web3Auth
-  useEffect(()=>{
-    const initializeWeb3Auth=async()=>{
-      try {
-        const chainConfig={
-          chainNamespace:CHAIN_NAMESPACES.OTHER,
-          chainId:"0x1",
-          rpcTarget: "https://rpc.polkadot.io/",
-          displayName: "Polkadot Mainnet",
-          blockExplorer: "https://explorer.polkascan.io/",
-          ticker: "DOT",
-          tickerName: "Polkadot",
-        }
-        const web3authInstance = new Web3AuthNoModal({
-          clientId,
-          chainConfig,
-          web3AuthNetwork: "aqua",
-        });
-
-        setWeb3auth(web3authInstance)
-
-        const privateKeyProvider = new CommonPrivateKeyProvider({ config: { chainConfig } });
-        const openloginAdapter = new OpenloginAdapter({
-          privateKeyProvider,
-        });
-        web3authInstance.configureAdapter(openloginAdapter);
-        await web3authInstance.init();
-        setProvider(web3authInstance.provider);
-        if (web3authInstance.connectedAdapterName) {
-          setLoggedIn(true);
-        }
-
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    initializeWeb3Auth()
-  },[])
-
-  const login = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-      loginProvider: "google",
-    });
-    setProvider(web3authProvider);
-    setLoggedIn(true);
-    console.log("Logged in Successfully!");
-  };
-
-  const logout = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    await web3auth.logout();
-    console.log("Logged Out")
-    setProvider(null);
-    setLoggedIn(false);
-  };
-
 
   return (
     <div className="relative bg-black">
@@ -176,24 +101,7 @@ const ConnectSection = () => {
           )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
           Connect
         </Button>
-        <Button
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-          onClick={login}
-        >
-          Login
-        </Button>
-        <Button
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-          onClick={logout}
-        >
-          Logout
-        </Button>
+
         <p className="px-8 text-center text-sm text-muted-foreground">
           By connecting your wallet, you agree to our{" "}
           <Link
