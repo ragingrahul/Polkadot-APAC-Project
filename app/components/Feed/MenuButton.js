@@ -9,7 +9,10 @@ const MenuButton = (props) => {
           <props.icon className="w-4 ml-1 mr-2" /> {props.name}
         </Button>
       ) : (
-        <Button className="bg-trasparent hover:bg-zinc-800 justify-start text-zinc-400 w-[90%]">
+        <Button
+          className="bg-trasparent hover:bg-zinc-800 justify-start text-zinc-400 w-[90%]"
+          onClick={props.OnClick}
+        >
           <props.icon className="w-4 ml-1 mr-2" /> {props.name}
         </Button>
       )}

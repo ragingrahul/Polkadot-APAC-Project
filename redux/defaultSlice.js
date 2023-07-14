@@ -4,6 +4,7 @@ const initialState = {
   polkadotAddress: null,
   evmAddress: null,
   onBoardingStep: 0,
+  currentTab: "feed",
 };
 
 export const defaultSlice = createSlice({
@@ -27,6 +28,9 @@ export const defaultSlice = createSlice({
       if (state.onBoardingStep < 3)
         state.onBoardingStep = state.onBoardingStep + 1;
     },
+    setCurrentTab: (state, action) => {
+      state.currentTab = action.payload;
+    },
   },
 });
 
@@ -36,4 +40,5 @@ export const {
   initiateOnboarding,
   previousOnboardingStep,
   nextOnboardingStep,
+  setCurrentTab,
 } = defaultSlice.actions;

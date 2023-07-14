@@ -19,12 +19,17 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import NavButton from "./NavButton";
+import { setCurrentTab } from "@/redux/defaultSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const polkadotAddress = "15gFi9nN4SR6pfPN8wJ9DvnMRTPvcS1Z5J8znFLSkr2paspZ";
 const evmAddress = "0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC";
 
 const Navbar = () => {
   const [walletToggle, setWalletToggle] = React.useState(false);
+  const currentTab = useSelector((state) => state.default.currentTab);
+  const dispatch = useDispatch();
+
   return (
     <div className="fixed bg-[color:var(--feed)] w-full h-[75px]">
       <div className="w-auto h-full flex ml-8 justify-between">
@@ -45,13 +50,28 @@ const Navbar = () => {
           </div>
 
           {/* Feed Button */}
-          <NavButton name="Feed" icon={Activity} isActive={true} />
+          <NavButton
+            name="Feed"
+            icon={Activity}
+            isActive={currentTab === "feed"}
+            OnClick={() => dispatch(setCurrentTab("feed"))}
+          />
 
           {/* Post Button */}
-          <NavButton name="Posts" icon={Repeat2} isActive={false} />
+          <NavButton
+            name="Posts"
+            icon={Repeat2}
+            isActive={currentTab === "posts"}
+            OnClick={() => dispatch(setCurrentTab("posts"))}
+          />
 
           {/* Videos Button */}
-          <NavButton name="Videos" icon={Play} isActive={false} />
+          <NavButton
+            name="Videos"
+            icon={Play}
+            isActive={currentTab === "videos"}
+            OnClick={() => dispatch(setCurrentTab("videos"))}
+          />
 
           {/* Search Bar */}
           <div className="flex h-full items-center">
