@@ -1,18 +1,20 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import {
   initiateOnboarding,
   setEvmAddress,
   setPolkadotAddress,
 } from "@/redux/defaultSlice";
+import { useWeb3Auth } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
+import { calculateMultilocation } from "@/utils/calculate-multilocation";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { CHAIN_NAMESPACES,WALLET_ADAPTERS } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
@@ -22,102 +24,48 @@ import RPC from "../../../utils/polkadotRPC"
 const clientId="BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
 
 const ConnectSection = () => {
-  const [web3auth,setWeb3auth]=React.useState(null)
-  const [provider,setProvider]=React.useState(null)
-  const [loggedIn,setLoggedIn]=React.useState(false)
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(false);
   const [email, setEmail] = React.useState();
+  const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
+  const {initializeWeb3Auth,loginWithEmail,getAccounts,logout,getUserInfo}=useWeb3Auth()
 
   const handleConnect = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       dispatch(initiateOnboarding());
-      dispatch(
-        setPolkadotAddress("15gFi9nN4SR6pfPN8wJ9DvnMRTPvcS1Z5J8znFLSkr2paspZ")
-      );
-      dispatch(setEvmAddress("0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC"));
     }, 1000);
   };
 
   React.useEffect(()=>{
-    const initializeWeb3Auth=async()=>{
-      try {
-        const chainConfig={
-          chainNamespace:CHAIN_NAMESPACES.OTHER,
-          chainId:"0x1",
-          rpcTarget: "https://rpc.polkadot.io/",
-          displayName: "Polkadot Mainnet",
-          blockExplorer: "https://explorer.polkascan.io/",
-          ticker: "DOT",
-          tickerName: "Polkadot",
-        }
-        const web3authInstance = new Web3AuthNoModal({
-          clientId,
-          chainConfig,
-          web3AuthNetwork: "aqua",
-        });
-
-        setWeb3auth(web3authInstance)
-        console.log("Here")
-        const privateKeyProvider = new CommonPrivateKeyProvider({ config: { chainConfig } });
-        const openloginAdapter = new OpenloginAdapter({
-          privateKeyProvider,
-        });
-        web3authInstance.configureAdapter(openloginAdapter);
-        await web3authInstance.init();
-        setProvider(web3authInstance.provider);
-        if (web3authInstance.connectedAdapterName) {
-          setLoggedIn(true);
-        }
-
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
+    
     initializeWeb3Auth()
+  
   },[])
+  
 
-
-  const loginWithEmail=async()=>{
-    if(!web3auth || email.length===0)
-      return;
-    
-    const web3authProvider=await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN,{
-      loginProvider:"email_passwordless",
-      extraLoginOptions:{
-        login_hint:email,
-      }
-    })
-    setProvider(web3authProvider)
-    setLoggedIn(true)
-    
+  //Implementing loginWithEmail Hook
+  const emailLogin=async()=>{
+    try {
+      setIsLoading(true)
+      await loginWithEmail({email:email})
+      setTimeout(createEVMAddress,200)
+    } catch (error) {
+      console.error(error)
+    }finally{
+      setIsLoading(false)
+    }
   }
 
-  const logout = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
+  const createEVMAddress=async()=>{
+    if(polkadotAddress){
+      //console.log(await polkadotAddress)
+      const multiLocation = await calculateMultilocation(await polkadotAddress)
+      dispatch(setEvmAddress(multiLocation))
     }
-    await web3auth.logout();
-    console.log("Logged Out")
-    setProvider(null);
-    setLoggedIn(false);
-  };
-
-  const getAccounts = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const userAccount = await rpc.getAccounts();
-    console.log("Address", userAccount);
-  };
-
-
+  }
+  
   return (
     <div className="relative bg-black">
       {/* Connect Section */}
@@ -157,7 +105,7 @@ const ConnectSection = () => {
         <Button
           disabled={isLoading}
           className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
-          onClick={handleConnect}
+          onClick={emailLogin}
         >
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Sign In with Email
@@ -188,27 +136,7 @@ const ConnectSection = () => {
           )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
           Connect
         </Button>
-
-        <Button
-          disabled={isLoading}
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-          onClick={loginWithEmail}
-        >
-          Login with Google
-        </Button>
-        <Button
-          disabled={isLoading}
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-          onClick={getAccounts}
-        >
-          Get Accounts
-        </Button>
+        
         <Button
           disabled={isLoading}
           className={cn(
