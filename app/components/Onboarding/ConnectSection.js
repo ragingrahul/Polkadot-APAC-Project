@@ -11,15 +11,11 @@ import {
   setEvmAddress,
   setPolkadotAddress,
 } from "@/redux/defaultSlice";
-import { useWeb3Auth } from "@/app/hooks";
+import { useWeb3Auth,useWallet } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
-import { calculateMultilocation } from "@/utils/calculate-multilocation";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { CHAIN_NAMESPACES,WALLET_ADAPTERS } from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { CommonPrivateKeyProvider } from "@web3auth/base-provider";
-import RPC from "../../../utils/polkadotRPC"
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+
 
 const clientId="BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
 
@@ -29,6 +25,7 @@ const ConnectSection = () => {
   const [email, setEmail] = React.useState();
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const {initializeWeb3Auth,loginWithEmail,getAccounts,logout,getUserInfo}=useWeb3Auth()
+  const {connectWallet}=useWallet()
 
   const handleConnect = () => {
     setIsLoading(true);
@@ -41,8 +38,8 @@ const ConnectSection = () => {
   React.useEffect(()=>{
     
     initializeWeb3Auth()
-  
-  },[])
+    
+  },[polkadotAddress])
   
 
   //Implementing loginWithEmail Hook
@@ -50,7 +47,7 @@ const ConnectSection = () => {
     try {
       setIsLoading(true)
       await loginWithEmail({email:email})
-      setTimeout(createEVMAddress,200)
+      dispatch(initiateOnboarding());
     } catch (error) {
       console.error(error)
     }finally{
@@ -58,13 +55,16 @@ const ConnectSection = () => {
     }
   }
 
-  const createEVMAddress=async()=>{
-    if(polkadotAddress){
-      //console.log(await polkadotAddress)
-      const multiLocation = await calculateMultilocation(await polkadotAddress)
-      dispatch(setEvmAddress(multiLocation))
+  //Implementing login with polkadot extension wallet
+  const walletLogin=async()=>{
+    try{
+      await connectWallet()
+      dispatch(initiateOnboarding());
+    }catch(error){
+      console.error(error)
     }
   }
+  
   
   return (
     <div className="relative bg-black">
@@ -129,7 +129,7 @@ const ConnectSection = () => {
             buttonVariants({ variant: "outline" }),
             "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
           )}
-          onClick={handleConnect}
+          onClick={walletLogin}
         >
           {(isLoading && (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

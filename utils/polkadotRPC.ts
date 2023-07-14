@@ -13,7 +13,7 @@ export default class PolkadotRPC {
 
   makeClient = async (): Promise<any> => {
     console.log("Establishing connection to Polkadot RPC...");
-    const provider = new WsProvider("wss://westend-rpc.polkadot.io"); // testnet
+    const provider = new WsProvider("wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network"); // testnet
     // const provider = new WsProvider("wss://rpc.polkadot.io"); // mainnet
     const api = await ApiPromise.create({ provider });
     const resp = await api.isReady;
@@ -26,11 +26,11 @@ export default class PolkadotRPC {
     const privateKey = (await this.provider.request({
       method: "private_key",
     })) as string;
-    console.log("privateKey", `0x${privateKey}`);
+
     const keyring = new Keyring({ ss58Format: 42, type: "sr25519" });
 
     const keyPair = keyring.addFromUri(`0x${privateKey}`);
-    console.log("keyPair", keyPair);
+  
     return keyPair;
   };
 

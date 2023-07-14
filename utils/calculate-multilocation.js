@@ -30,13 +30,10 @@ export async function calculateMultilocation(address) {
       ...decodedAddress,
     ]);
   
-    console.log(`Remote Origin calculated as ${family}`);
-    console.log(`${accType}: ${address}`);
-  
+      
     const DescendOriginAddress32 = u8aToHex(blake2AsU8a(toHash).slice(0, 32));
     const DescendOriginAddress20 = u8aToHex(blake2AsU8a(toHash).slice(0, 20));
   
-    console.log(`32 byte address is ${DescendOriginAddress32}`);
     console.log(`20 byte address is ${DescendOriginAddress20}`);
 
     return DescendOriginAddress20;
