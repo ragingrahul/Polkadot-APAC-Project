@@ -29,15 +29,18 @@ export const defaultSlice = createSlice({
       state.onBoardingStep = 1;
     },
     previousOnboardingStep: (state) => {
-      if (state.onBoardingStep > 1)
+      if (state.onBoardingStep > 0)
         state.onBoardingStep = state.onBoardingStep - 1;
     },
     nextOnboardingStep: (state) => {
-      if (state.onBoardingStep < 3)
+      if (state.onBoardingStep < 4)
         state.onBoardingStep = state.onBoardingStep + 1;
     },
     setCurrentTab: (state, action) => {
       state.currentTab = action.payload;
+    },
+    initiateLoggedIn: (state) => {
+      state.onBoardingStep = 2;
     },
   },
 });
@@ -51,4 +54,5 @@ export const {
   previousOnboardingStep,
   nextOnboardingStep,
   setCurrentTab,
+  initiateLoggedIn,
 } = defaultSlice.actions;
