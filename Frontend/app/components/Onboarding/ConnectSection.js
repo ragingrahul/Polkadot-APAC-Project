@@ -1,4 +1,5 @@
 "use client";
+import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,8 @@ import {
 import { useWeb3Auth,useWallet } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 
+//const connectWallet=dynamic(()=>import("../../hooks/useWallet"),{ssr:false,})
 
 const clientId="BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
 
@@ -58,7 +59,9 @@ const ConnectSection = () => {
   //Implementing login with polkadot extension wallet
   const walletLogin=async()=>{
     try{
-      await connectWallet()
+      
+      const address= await connectWallet()
+      console.log(address)
       dispatch(initiateOnboarding());
     }catch(error){
       console.error(error)
