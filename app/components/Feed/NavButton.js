@@ -9,7 +9,10 @@ const NavButton = (props) => {
           <props.icon className="w-4 mr-2" /> {props.name}
         </Button>
       ) : (
-        <Button className="bg-[color:var(--feed)] hover:bg-[color:var(--feed-foreground)]">
+        <Button
+          className="bg-[color:var(--feed)] hover:bg-[color:var(--feed-foreground)]"
+          onClick={props.OnClick}
+        >
           <props.icon className="w-4 mr-2" /> {props.name}
         </Button>
       )}
