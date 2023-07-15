@@ -2,15 +2,15 @@
 
 import { WsProvider, ApiPromise, Keyring } from '@polkadot/api'
 import { useEffect, useState } from 'react'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+import dynamic from 'next/dynamic'
 import { calculateMultilocation } from '@/utils/calculate-multilocation'
 //import { ethers } from 'ethers'
 import { useDispatch, useSelector } from "react-redux"
 import {
-    initiateOnboarding,
+    
     setEvmAddress,
     setPolkadotAddress,
-    setProvider
+    
 } from "@/redux/defaultSlice";
 
 export function useWallet(){
@@ -32,16 +32,19 @@ export function useWallet(){
     }
 
     const connectWallet=async()=>{
+        const { web3Accounts, web3Enable } = await import(
+            "@polkadot/extension-dapp"
+          );
         const extensions =await web3Enable("dotUser")
 
         if(!extensions){
             throw Error("No Extensions found")
         }
-
+        console.log("Hello")
         const accounts=await web3Accounts()
-
+        console.log(accounts[0].address)
         dispatch(setPolkadotAddress(accounts[0].address))
-
+        return accounts[0].address
     }
 
     return{
