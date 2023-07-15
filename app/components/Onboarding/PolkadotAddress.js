@@ -61,6 +61,18 @@ const PolkadotAddress = () => {
               "bg-white text-black hover:bg-gray-300 hover:text-black w-[240px] relative"
             )}
             onClick={() => {
+              dispatch(previousOnboardingStep());
+            }}
+          >
+            <ChevronLeft className="absolute left-3 w-4" />
+            Previous
+          </Button>
+          <Button
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "bg-white text-black hover:bg-gray-300 hover:text-black w-[240px] relative"
+            )}
+            onClick={() => {
               dispatch(nextOnboardingStep());
             }}
           >
