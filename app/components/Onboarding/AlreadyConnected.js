@@ -4,14 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
 import { nextOnboardingStep } from "@/redux/defaultSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
+import { ethers } from "ethers";
+
+const dotComUser="0x444a911808D18E17Bf4D7eB44Aa4dee09c605248"
+let ABI = [
+  "function addressToId(address) public view returns (uint256)",
+  "function idToUser(uint256) public view returns (uint256,string,address,string,string,uint256)"
+]
 
 const AlreadyConnected = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const dispatch = useDispatch();
+  const evmAddress=useSelector((state)=>state.default.evmAddress)
+
+  const getProfile=async()=>{
+    const provider =new ethers.providers.JsonRpcProvider('https://rpc.api.moonbase.moonbeam.network')
+    const contract=new ethers.Contract(dotComUser,ABI,provider)
+    
+    const id=await contract.addressToId(evmAddress)
+    
+    const profile=await contract.idToUser(id)
+    console.log(profile)
+  }
+  
   return (
     <div className="relative bg-black">
       {/* Connect Section */}
@@ -42,7 +60,7 @@ const AlreadyConnected = () => {
         <Button
           disabled={isLoading}
           className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
-          onClick={() => dispatch(nextOnboardingStep())}
+          onClick={getProfile}
         >
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Create Profile

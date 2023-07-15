@@ -30,7 +30,7 @@ export default class PolkadotRPC {
     const keyring = new Keyring({ ss58Format: 42, type: "sr25519" });
 
     const keyPair = keyring.addFromUri(`0x${privateKey}`);
-  
+    
     return keyPair;
   };
 
