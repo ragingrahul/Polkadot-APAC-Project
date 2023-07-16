@@ -14,6 +14,10 @@ const thoughtSchema = new mongoose.Schema({
     required: true,
   },
   likes: [String],
+  type: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     default: Date.now(),

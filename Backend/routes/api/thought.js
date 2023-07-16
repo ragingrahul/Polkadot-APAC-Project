@@ -45,6 +45,7 @@ router.post(
     auth,
     [
       check("content", "Content is required").not().isEmpty(),
+      check("type", "Type is required").not().isEmpty(),
       check("evmAddress", "EVM Address is required").not().isEmpty(),
     ],
   ],
@@ -58,6 +59,7 @@ router.post(
       address: req.address,
       evmAddress: req.body.evmAddress,
       content: req.body.content,
+      type: req.body.type,
     });
 
     newThought
