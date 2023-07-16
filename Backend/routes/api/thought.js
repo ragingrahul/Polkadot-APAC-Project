@@ -22,6 +22,14 @@ router.get("/user", auth, (req, res) => {
     .catch((err) => res.json({ error: err }));
 });
 
+//Get User Post by EVM Address
+router.get("/user/:address", (req, res) => {
+  Thought.find({ evmAddress: req.params.address })
+    .sort({ date: -1 })
+    .then((posts) => res.json(posts))
+    .catch((err) => res.json({ error: err }));
+});
+
 //Get Thought by ID
 router.get("/:id", (req, res) => {
   post
@@ -33,7 +41,13 @@ router.get("/:id", (req, res) => {
 //Create Thought
 router.post(
   "/",
-  [auth, [check("content", "Content is required").not().isEmpty()]],
+  [
+    auth,
+    [
+      check("content", "Content is required").not().isEmpty(),
+      check("evmAddress", "EVM Address is required").not().isEmpty(),
+    ],
+  ],
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,6 +56,7 @@ router.post(
 
     const newThought = new Thought({
       address: req.address,
+      evmAddress: req.body.evmAddress,
       content: req.body.content,
     });
 
