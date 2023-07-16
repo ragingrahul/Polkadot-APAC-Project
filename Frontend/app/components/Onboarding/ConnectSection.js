@@ -16,25 +16,16 @@ import { useWeb3Auth,useWallet } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
 
-//const connectWallet=dynamic(()=>import("../../hooks/useWallet"),{ssr:false,})
 
-const clientId="BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
 
 const ConnectSection = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(false);
   const [email, setEmail] = React.useState();
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
-  const {initializeWeb3Auth,loginWithEmail,getAccounts,logout,getUserInfo}=useWeb3Auth()
-  const {connectWallet}=useWallet()
+  const {initializeWeb3Auth,loginWithEmail,logout}=useWeb3Auth()
+  const {connectWallet,sign}=useWallet()
 
-  const handleConnect = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      dispatch(initiateOnboarding());
-    }, 1000);
-  };
 
   React.useEffect(()=>{
     
