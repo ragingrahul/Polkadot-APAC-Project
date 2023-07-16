@@ -4,6 +4,7 @@ import { WsProvider, ApiPromise, Keyring } from '@polkadot/api'
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { calculateMultilocation } from '@/utils/calculate-multilocation'
+import { hexToU8a, stringToHex,stringToU8a } from '@polkadot/util'
 //import { ethers } from 'ethers'
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -47,7 +48,29 @@ export function useWallet(){
         return accounts[0].address
     }
 
+    const sign=async()=>{
+        const { web3Accounts,web3FromSource } = await import(
+            "@polkadot/extension-dapp"
+          );
+        
+        const allAccounts=await web3Accounts()
+        const account=allAccounts[0]
+
+        const injector=await web3FromSource(account.meta.source)
+
+        const signRaw=injector?.signer?.signRaw
+
+        if(!!signRaw){
+            const {signature}=await signRaw({
+                address:account.address,
+                data:stringToU8a('Welcome to DotCom. Please read the terms and conditions before using the service.'),
+                type:'bytes'
+            })
+            console.log(hexToU8a(signature))
+        }
+    }
     return{
-        connectWallet
+        connectWallet,
+        sign
     }
 }
