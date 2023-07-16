@@ -130,19 +130,7 @@ const ConnectSection = () => {
           )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
           Connect
         </Button>
-        <Button
-          disabled={isLoading}
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-          onClick={sign}
-        >
-          {(isLoading && (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
-          Sign
-        </Button>
+        
         <Button
           disabled={isLoading}
           className={cn(

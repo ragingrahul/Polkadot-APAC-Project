@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { Wallet2 } from "lucide-react";
+import { Router, Wallet2 } from "lucide-react";
 import { nextOnboardingStep } from "@/redux/defaultSlice";
 import { useDispatch,useSelector } from "react-redux";
 import { ethers } from "ethers";
+import { getProfile } from "@/app/api/getProfile";
 
 const dotComUser="0x444a911808D18E17Bf4D7eB44Aa4dee09c605248"
 let ABI = [
@@ -17,18 +19,29 @@ let ABI = [
 
 const AlreadyConnected = () => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const [hasProfile,setHasProfile]=React.useState(false);
   const dispatch = useDispatch();
   const evmAddress=useSelector((state)=>state.default.evmAddress)
+  const router=useRouter()
 
-  const getProfile=async()=>{
-    const provider =new ethers.providers.JsonRpcProvider('https://rpc.api.moonbase.moonbeam.network')
-    const contract=new ethers.Contract(dotComUser,ABI,provider)
-    
-    const id=await contract.addressToId(evmAddress)
-    
-    const profile=await contract.idToUser(id)
-    console.log(profile)
+  const getPro=async()=>{
+    if(evmAddress.length>0){
+    const res=await getProfile(evmAddress)
+    if(res[1].length===0){
+      console.log("No User")
+      setHasProfile(false)
+      return;
+    }
+    setHasProfile(true)
+    console.log(res)
+    }
   }
+
+  useEffect(()=>{
+    if(hasProfile)
+      return
+    getPro()
+  },[evmAddress])
   
   return (
     <div className="relative bg-black">
@@ -57,14 +70,27 @@ const AlreadyConnected = () => {
         </div>
 
         {/* Connect with Email */}
-        <Button
-          disabled={isLoading}
-          className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
-          onClick={getProfile}
-        >
-          {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-          Create Profile
-        </Button>
+        {hasProfile?
+          (<Button
+            disabled={isLoading}
+            className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
+            onClick={()=>{
+              router.push('/feed')
+            }}
+          >
+            {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+            Go to Feed
+          </Button>):
+          (<Button
+            disabled={isLoading}
+            className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
+            onClick={()=>dispatch(nextOnboardingStep())}
+          >
+            {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+            Create Profile
+          </Button>)
+        }
+        
 
         <div className="relative  w-[300px]">
           <div className="absolute inset-0 flex items-center">
