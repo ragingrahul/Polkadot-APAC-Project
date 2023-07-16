@@ -21,6 +21,14 @@ router.get("/user", auth, (req, res) => {
     .catch((err) => res.json({ error: err }));
 });
 
+//Get User Post by EVM Address
+router.get("/user/:address", (req, res) => {
+  Post.find({ evmAddress: req.params.address })
+    .sort({ date: -1 })
+    .then((posts) => res.json(posts))
+    .catch((err) => res.json({ error: err }));
+});
+
 //Get Post by ID
 router.get("/:id", (req, res) => {
   Post.findById(req.params.id)
@@ -34,6 +42,7 @@ router.post(
   [
     auth,
     [
+      check("evmAddress", "EVM Address is required").not().isEmpty(),
       check("title", "Title is required").not().isEmpty(),
       check("cover", "Cover is required").not().isEmpty(),
       check("content", "Content is required").not().isEmpty(),
@@ -48,6 +57,7 @@ router.post(
 
     const newPost = new Post({
       address: req.address,
+      evmAddress: req.body.evmAddress,
       title: req.body.title,
       cover: req.body.cover,
       content: req.body.content,

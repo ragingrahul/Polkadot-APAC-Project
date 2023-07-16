@@ -9,7 +9,7 @@ let ABI = [
   "function idToUser(uint256) public view returns (uint256,string,address,string,string,uint256)",
 ];
 
-router.get("/:address", async (req, res) => {
+router.get("/evm/:address", async (req, res) => {
   try {
     const provider = new JsonRpcProvider(
       "https://rpc.api.moonbase.moonbeam.network"
