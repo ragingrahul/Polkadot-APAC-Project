@@ -46,6 +46,7 @@ router.post(
       check("title", "Title is required").not().isEmpty(),
       check("cover", "Cover is required").not().isEmpty(),
       check("content", "Content is required").not().isEmpty(),
+      check("type", "Type is required").not().isEmpty(),
       check("web", "Web is required").not().isEmpty(),
     ],
   ],
@@ -61,6 +62,7 @@ router.post(
       title: req.body.title,
       cover: req.body.cover,
       content: req.body.content,
+      type: req.body.type,
       web: req.body.web,
       chain: req.body.chain,
     });
