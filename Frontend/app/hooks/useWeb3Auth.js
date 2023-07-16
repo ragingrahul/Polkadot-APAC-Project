@@ -13,8 +13,9 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 import RPC from "../../utils/polkadotRPC"
 import { calculateMultilocation } from "@/utils/calculate-multilocation";
+import { clientId } from "@/utils/constants"
 
-const clientId = "BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
+//const clientId = "BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE"
 
 
 export function useWeb3Auth() {
