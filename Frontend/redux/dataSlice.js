@@ -14,10 +14,8 @@ const initialState = {
 //Fetch all data
 export const fetchAlldata = createAsyncThunk("data/fetchAlldata", async () => {
   try {
-    const posts = await axios.get("http://64.227.154.19:5000/api/post/all");
-    const thoughts = await axios.get(
-      "http://64.227.154.19:5000/api/thought/all"
-    );
+    const posts = await axios.get("//64.227.154.19:5000/api/post/all");
+    const thoughts = await axios.get("//64.227.154.19:5000/api/thought/all");
     const res = posts.data.concat(thoughts.data);
     return res;
   } catch {
@@ -31,7 +29,7 @@ export const fetchAllPosts = createAsyncThunk(
   "data/fetchAllPosts",
   async () => {
     try {
-      const res = await axios.get("http://64.227.154.19:5000/api/post/all");
+      const res = await axios.get("//64.227.154.19:5000/api/post/all");
       return res.data;
     } catch {
       console.log(error);
@@ -45,7 +43,7 @@ export const fetchAllThoughts = createAsyncThunk(
   "data/fetchAllThoughts",
   async () => {
     try {
-      const res = await axios.get("http://64.227.154.19:5000/api/thought/all");
+      const res = await axios.get("//64.227.154.19:5000/api/thought/all");
       return res.data;
     } catch {
       console.log(error);
@@ -59,7 +57,7 @@ export const fetchPostById = createAsyncThunk(
   "data/fetchPostById",
   async (id) => {
     try {
-      const res = await axios.get(`http://64.227.154.19:5000/api/post/${id}`);
+      const res = await axios.get(`//64.227.154.19:5000/api/post/${id}`);
       return res.data;
     } catch {
       console.log(error);
@@ -73,9 +71,7 @@ export const fetchThoughtById = createAsyncThunk(
   "data/fetchThoughtById",
   async (id) => {
     try {
-      const res = await axios.get(
-        `http://64.227.154.19:5000/api/thought/${id}`
-      );
+      const res = await axios.get(`//64.227.154.19:5000/api/thought/${id}`);
       return res.data;
     } catch {
       console.log(error);
@@ -89,9 +85,7 @@ export const fetchPostsByAddress = createAsyncThunk(
   "data/fetchPostsByAddress",
   async (address) => {
     try {
-      const res = await axios.get(
-        `http://64.227.154.19:5000/api/post/${address}`
-      );
+      const res = await axios.get(`//64.227.154.19:5000/api/post/${address}`);
       return res.data;
     } catch {
       console.log(error);
@@ -106,7 +100,7 @@ export const fetchThoughtsByAddress = createAsyncThunk(
   async (address) => {
     try {
       const res = await axios.get(
-        `http://64.227.154.19:5000/api/thought/${address}`
+        `//64.227.154.19:5000/api/thought/${address}`
       );
       return res.data;
     } catch {
