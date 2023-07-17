@@ -39,7 +39,10 @@ const Navbar = () => {
     <div className="fixed bg-[color:var(--feed)] w-full h-[75px]">
       <div className="w-auto h-full flex ml-8 justify-between">
         <div className="flex h-full items-center space-x-5">
-          <div className="flex justify-between mr-10 h-full items-center w-[220px] group">
+          <div
+            className="flex justify-between mr-10 h-full items-center w-[220px] group"
+            onClick={() => dispatch(setCurrentTab("setting"))}
+          >
             {/* Avatar */}
             <div className="flex h-full items-center ">
               <Avatar>
