@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0, 100%, 100%;
+    --background: 225 10% 8%;
     --foreground: 222.2 84% 4.9%;
 
     --muted: 210 40% 96.1%;
@@ -40,7 +40,7 @@
   }
 
   .dark {
-    --background: 0 100% 100%;
+    --background: 225, 10%, 8%;
     --foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -92,4 +92,9 @@
     rgba(255, 255, 255, 0) 100%
   );
   background-clip: text;
+}
+
+.profileGradient {
+  background: rgb(0, 0, 0);
+  background: linear-gradient(180deg, #a1a1aa00 0%, #121316 100%);
 }

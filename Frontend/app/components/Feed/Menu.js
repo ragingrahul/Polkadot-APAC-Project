@@ -9,11 +9,13 @@ import {
   UserCircle2,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentTab } from "@/redux/defaultSlice";
+import { setCurrentTab, setSelectedAddress } from "@/redux/defaultSlice";
 
 const Menu = () => {
   const dispatch = useDispatch();
   const currentTab = useSelector((state) => state.default.currentTab);
+  const evmAddress = useSelector((state) => state.default.evmAddress);
+  const selectedAddress = useSelector((state) => state.default.selectedAddress);
   return (
     // Side Menu
     <div className="flex flex-col bg-[color:var(--feed-foreground)] w-[80%] ml-8 rounded-2xl hover:text-white items-center py-2 space-y-1">
@@ -26,8 +28,13 @@ const Menu = () => {
       <MenuButton
         icon={UserCircle2}
         name="My Profile"
-        isActive={currentTab == "myProfile"}
-        OnClick={() => dispatch(setCurrentTab("myProfile"))}
+        isActive={currentTab == "myProfile" && selectedAddress == evmAddress}
+        OnClick={() => {
+          if (evmAddress) {
+            dispatch(setSelectedAddress(evmAddress));
+            dispatch(setCurrentTab("myProfile"));
+          }
+        }}
       />
       <MenuButton
         icon={BookMarked}

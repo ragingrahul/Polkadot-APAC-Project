@@ -21,14 +21,19 @@ import { buttonVariants } from "@/components/ui/button";
 import NavButton from "./NavButton";
 import { setCurrentTab } from "@/redux/defaultSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-const polkadotAddress = "15gFi9nN4SR6pfPN8wJ9DvnMRTPvcS1Z5J8znFLSkr2paspZ";
-const evmAddress = "0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC";
+import { fetchLoggedInUser } from "@/redux/dataSlice";
 
 const Navbar = () => {
   const [walletToggle, setWalletToggle] = React.useState(false);
   const currentTab = useSelector((state) => state.default.currentTab);
+  const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
+  const evmAddress = useSelector((state) => state.default.evmAddress);
+  const user = useSelector((state) => state.data.loggedInUser);
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(fetchLoggedInUser(evmAddress));
+  }, [evmAddress]);
 
   return (
     <div className="fixed bg-[color:var(--feed)] w-full h-[75px]">
@@ -38,9 +43,10 @@ const Navbar = () => {
             {/* Avatar */}
             <div className="flex h-full items-center ">
               <Avatar>
-                <AvatarFallback>{"AN"}</AvatarFallback>
+                <AvatarImage src={user[3]} />
+                <AvatarFallback>{"Dot"}</AvatarFallback>
               </Avatar>
-              <h1 className="text-white text-sm mx-3">Anoy</h1>
+              <h1 className="text-white text-sm mx-3">{user[1]}</h1>
             </div>
 
             {/* Profile Setting */}

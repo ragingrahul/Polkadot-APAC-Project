@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Heart, Plus } from "lucide-react";
 import Image from "next/image";
 import { getProfile } from "@/app/api/getProfile";
+import { useSelector } from "react-redux";
 
 const PostTab = (props) => {
   const [user, setUser] = React.useState({});
+  const evmAddress = useSelector((state) => state.default.evmAddress);
   useEffect(() => {
     if (props.post.address) {
       getProfile(props.post.evmAddress).then((res) => {
@@ -27,9 +29,11 @@ const PostTab = (props) => {
         </div>
 
         {/* Follow Button */}
-        <Button className="bg-zinc-800 hover:bg-zinc-600">
-          <Plus className="w-4 mr-2" /> Follow
-        </Button>
+        {evmAddress !== props.post.evmAddress && (
+          <Button className="bg-zinc-800 hover:bg-zinc-600">
+            <Plus className="w-4 mr-2" /> Follow
+          </Button>
+        )}
       </div>
 
       {/* Post Title */}
