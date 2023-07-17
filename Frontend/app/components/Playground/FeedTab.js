@@ -11,7 +11,11 @@ const FeedTab = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (data.length === 0) dispatch(fetchAlldata());
+    dispatch(fetchAlldata());
+  }, []);
+
+  React.useEffect(() => {
+    console.log(data);
   }, []);
 
   return (

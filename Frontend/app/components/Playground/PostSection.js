@@ -9,7 +9,7 @@ const PostSection = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (posts.length === 0) dispatch(fetchAllPosts());
+    dispatch(fetchAllPosts());
   }, []);
 
   return (

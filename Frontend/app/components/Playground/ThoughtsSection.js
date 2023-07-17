@@ -9,7 +9,7 @@ const ThoughtsSection = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (thoughts.length === 0) dispatch(fetchAllThoughts());
+    dispatch(fetchAllThoughts());
   }, []);
 
   return (
