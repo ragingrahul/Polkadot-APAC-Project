@@ -15,7 +15,7 @@ export default class PolkadotRPC {
     console.log("Establishing connection to Polkadot RPC...");
     const provider = new WsProvider("wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network"); // testnet
     // const provider = new WsProvider("wss://rpc.polkadot.io"); // mainnet
-    const api = await ApiPromise.create({ provider });
+    const api = await ApiPromise.create({ provider:provider });
     const resp = await api.isReady;
     console.log("Polkadot RPC is ready", resp);
     return api;
