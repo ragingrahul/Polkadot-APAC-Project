@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  polkadotAddress: null,
-  evmAddress: null,
+  polkadotAddress: "5DkBir9sdbYgxpbUQ2PpPgtQpCznzQy32QpvNWkkKfFqe78S",
+  evmAddress: "0xef7bcb9acb294da0eded2d28f7edcbafd81fb0e2",
+  selectedAddress: null,
   onBoardingStep: 0,
   currentTab: "feed",
   web3Auth: null,
@@ -42,6 +43,9 @@ export const defaultSlice = createSlice({
     initiateLoggedIn: (state) => {
       state.onBoardingStep = 2;
     },
+    setSelectedAddress: (state, action) => {
+      state.selectedAddress = action.payload;
+    },
   },
 });
 
@@ -55,4 +59,5 @@ export const {
   nextOnboardingStep,
   setCurrentTab,
   initiateLoggedIn,
+  setSelectedAddress,
 } = defaultSlice.actions;

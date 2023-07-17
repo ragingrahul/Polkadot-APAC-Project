@@ -7,15 +7,48 @@ const initialState = {
   thoughts: [],
   postById: {},
   thoughtById: {},
+  selectedUser: [],
+  loggedInUser: [],
   loading: false,
   error: null,
 };
 
+//Fetch user data
+export const fetchUser = createAsyncThunk("data/fetchUser", async (address) => {
+  try {
+    const res = await axios.get(
+      `https://dotcombackend.me/api/user/evm/${address}`
+    );
+    return res.data;
+  } catch {
+    console.log(error);
+    throw Error(error);
+  }
+});
+
+//
+export const fetchLoggedInUser = createAsyncThunk(
+  "data/fetchLoggedInUser",
+  async (address) => {
+    try {
+      const res = await axios.get(
+        `https://dotcombackend.me/api/user/evm/${address}`
+      );
+      return res.data;
+    } catch {
+      console.log(error);
+      throw Error(error);
+    }
+  }
+);
+
 //Fetch all data
 export const fetchAlldata = createAsyncThunk("data/fetchAlldata", async () => {
   try {
-    const posts = await axios.get("//64.227.154.19:5000/api/post/all");
-    const thoughts = await axios.get("//64.227.154.19:5000/api/thought/all");
+    const posts = await axios.get("https://dotcombackend.me/api/post/all");
+    const thoughts = await axios.get(
+      "https://dotcombackend.me/api/thought/all"
+    );
     const res = posts.data.concat(thoughts.data);
     return res;
   } catch {
@@ -24,12 +57,32 @@ export const fetchAlldata = createAsyncThunk("data/fetchAlldata", async () => {
   }
 });
 
+//Fetch all user data
+export const fetchAllUserData = createAsyncThunk(
+  "data/fetchAllUserData",
+  async (address) => {
+    try {
+      const posts = await axios.get(
+        `https://dotcombackend.me/api/post/user/${address}`
+      );
+      const thoughts = await axios.get(
+        `https://dotcombackend.me/api/thought/user/${address}`
+      );
+      const res = posts.data.concat(thoughts.data);
+      return res;
+    } catch {
+      console.log(error);
+      throw Error(error);
+    }
+  }
+);
+
 //Fetch all posts
 export const fetchAllPosts = createAsyncThunk(
   "data/fetchAllPosts",
   async () => {
     try {
-      const res = await axios.get("//64.227.154.19:5000/api/post/all");
+      const res = await axios.get("https://dotcombackend.me/api/post/all");
       return res.data;
     } catch {
       console.log(error);
@@ -43,7 +96,7 @@ export const fetchAllThoughts = createAsyncThunk(
   "data/fetchAllThoughts",
   async () => {
     try {
-      const res = await axios.get("//64.227.154.19:5000/api/thought/all");
+      const res = await axios.get("https://dotcombackend.me/api/thought/all");
       return res.data;
     } catch {
       console.log(error);
@@ -57,7 +110,7 @@ export const fetchPostById = createAsyncThunk(
   "data/fetchPostById",
   async (id) => {
     try {
-      const res = await axios.get(`//64.227.154.19:5000/api/post/${id}`);
+      const res = await axios.get(`https://dotcombackend.me/api/post/${id}`);
       return res.data;
     } catch {
       console.log(error);
@@ -71,7 +124,7 @@ export const fetchThoughtById = createAsyncThunk(
   "data/fetchThoughtById",
   async (id) => {
     try {
-      const res = await axios.get(`//64.227.154.19:5000/api/thought/${id}`);
+      const res = await axios.get(`https://dotcombackend.me/api/thought/${id}`);
       return res.data;
     } catch {
       console.log(error);
@@ -85,7 +138,9 @@ export const fetchPostsByAddress = createAsyncThunk(
   "data/fetchPostsByAddress",
   async (address) => {
     try {
-      const res = await axios.get(`//64.227.154.19:5000/api/post/${address}`);
+      const res = await axios.get(
+        `https://dotcombackend.me/api/post/${address}`
+      );
       return res.data;
     } catch {
       console.log(error);
@@ -100,7 +155,7 @@ export const fetchThoughtsByAddress = createAsyncThunk(
   async (address) => {
     try {
       const res = await axios.get(
-        `//64.227.154.19:5000/api/thought/${address}`
+        `https://dotcombackend.me/api/thought/${address}`
       );
       return res.data;
     } catch {
@@ -116,6 +171,28 @@ export const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) =>
     builder
+      .addCase(fetchUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.selectedUser = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.loading = false;
+      })
+      .addCase(fetchLoggedInUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchLoggedInUser.fulfilled, (state, action) => {
+        state.loggedInUser = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchLoggedInUser.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.loading = false;
+      })
       .addCase(fetchAlldata.pending, (state) => {
         state.loading = true;
       })
@@ -124,6 +201,17 @@ export const dataSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchAlldata.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.loading = false;
+      })
+      .addCase(fetchAllUserData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllUserData.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchAllUserData.rejected, (state, action) => {
         state.error = action.error.message;
         state.loading = false;
       })
