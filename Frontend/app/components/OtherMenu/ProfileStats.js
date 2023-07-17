@@ -16,15 +16,13 @@ const ProfileStats = () => {
     <>
       {data && (
         <div className="w-full bg-[color:var(--feed-foreground)] text-sm p-5 pr-7 flex flex-col items-center text-zinc-400 rounded-2xl space-y-4">
-          <div className="flex w-full items-center justify-center">
+          <div className="flex w-full justify-center">
             {/* Followers and Following */}
-            <h1 className="text-2xl text-white text-bold">
-              6 <span className="text-xl text-zinc-400"> Followers </span>
-            </h1>
+            <h1 className="text-base text-white text-bold">6</h1>
+            <span className="text-base ml-2 text-zinc-400"> Followers </span>
             <DotIcon className="w-6 h-6 text-zinc-400 mx-3" />
-            <h1 className="text-2xl text-white text-bold">
-              9 <span className="text-xl text-zinc-400"> Following </span>
-            </h1>
+            <h1 className="text-base text-white text-bold">9</h1>
+            <span className="text-base ml-2 text-zinc-400"> Following </span>
           </div>
 
           <div className="flex items-center justify-center bg-zinc-900 rounded-full py-3 px-9">
