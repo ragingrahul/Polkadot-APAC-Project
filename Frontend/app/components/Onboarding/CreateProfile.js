@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { previousOnboardingStep } from "@/redux/defaultSlice";
 import { initializeUser } from "@/app/hooks/initializeUserXCM";
 import { saveToIPFS } from "@/app/hooks/saveToIPFS";
+import { WsProvider,ApiPromise } from "@polkadot/api";
+import RPC from '../../../utils/polkadotRPC'
 
 const CreateProfile = () => {
   const [name, setName] = React.useState();
@@ -32,9 +34,11 @@ const CreateProfile = () => {
   const dispatch = useDispatch();
   const evmAddress = useSelector((state) => state.default.evmAddress)
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress)
+  const provider = useSelector((state) => state.default.provider)
+
 
   const createProfile = async () => {
-    const { web3FromAddress } = await import(
+    const { web3Enable,web3FromAddress } = await import(
       "@polkadot/extension-dapp"
     );
     if (!name || !bio || !date || !avatar)
@@ -46,17 +50,34 @@ const CreateProfile = () => {
       const substrateProvider = new WsProvider(providerWsURL);
       const api = await ApiPromise.create({ provider: substrateProvider });
       const xcmCallData = await initializeUser(evmAddress, name, cid, bio, unixDate)
+      const extension=await web3Enable("dotUser")
       const injector = await web3FromAddress(polkadotAddress)
 
       const tx = await api.tx(xcmCallData).signAndSend(polkadotAddress, { signer: injector.signer }, ({ result }) => {
         console.log(`Transaction Sent`)
         if (Result.status.isInBlock) {
-          console.log(`Transaction include in blockhasjh ${result.status.asInBlock}`)
+          console.log(`Transaction include in blockhash ${result.status.asInBlock}`)
         }
       })
     }
-
   }
+
+  const createProfileWithWeb3Auth=async()=>{
+    if (!name || !bio || !date || !avatar)
+      window.alert("Fill all fields")
+    else {
+      const cid = await saveToIPFS(avatar)
+      const unixDate = parseInt(date.getTime() / 1000)
+      const xcmCallData = await initializeUser(evmAddress, name, cid, bio, unixDate)
+      console.log(xcmCallData)
+      const rpc=new RPC(provider)
+      const keyPair=await rpc.getPolkadotKeyPair()
+      const api=await rpc.makeClient()
+      const tx= await api.tx(xcmCallData).signAndSend(keyPair)
+      console.log(tx)
+    }
+  }
+
   return (
     <div className="bg-black relative flex-col justify-center items-center flex">
       <div className="px-20 flex flex-col justify-center">
@@ -212,7 +233,7 @@ const CreateProfile = () => {
           <Button
             disabled={isLoading}
             className="bg-white text-black hover:bg-gray-300 hover:text-black w-[190px]"
-            onClick={createProfile}
+            onClick={createProfileWithWeb3Auth}
           >
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

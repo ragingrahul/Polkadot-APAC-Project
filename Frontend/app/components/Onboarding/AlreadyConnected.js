@@ -26,7 +26,7 @@ const AlreadyConnected = () => {
 
   const getPro=async()=>{
     if(evmAddress.length>0){
-    const res=await getProfile("0x14D8e2C3A03f3708dA1a04002F91B953FB9853CC")
+    const res=await getProfile(evmAddress)
     if(res[1].length===0){
       console.log("No User")
       setHasProfile(false)

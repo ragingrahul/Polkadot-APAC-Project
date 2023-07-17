@@ -23,6 +23,7 @@ export function useWeb3Auth() {
     const [web3auth, setWeb3auth] = useState(null)
     const provider = useSelector((state) => state.default.provider)
     const polkadotAddress = useSelector((state) => state.default.polkadotAddress)
+    
     //Initialize Web3 Auth
 
     useEffect(() => {
@@ -133,11 +134,24 @@ export function useWeb3Auth() {
         console.log(user);
     };
 
+    const sendTransactionToCreateProfile=async(xcmCallData)=>{
+        if(!provider){
+            console.log("provider not initialized yet");
+            return;
+        }
+        const rpc=new RPC(provider)
+        const keyPair=await rpc.getPolkadotKeyPair()
+        const api=await rpc.makeClient()
+        const tx= await api.tx(xcmCallData).signAndSend(keyPair)
+        console.log(tx)
+    }
+
     return {
         initializeWeb3Auth,
         loginWithEmail,
         getAccounts,
         logout,
-        getUserInfo
+        getUserInfo,
+        sendTransactionToCreateProfile
     }
 }
