@@ -5,7 +5,7 @@ import { Heart, Plus } from "lucide-react";
 import Image from "next/image";
 import { getProfile } from "@/app/api/getProfile";
 
-const PostTab = (props) => {
+const ThoughtTab = (props) => {
   const [user, setUser] = React.useState({});
   useEffect(() => {
     if (props.post.address) {
@@ -21,7 +21,7 @@ const PostTab = (props) => {
         <div className="flex items-center mb-5">
           <Avatar>
             {user && <AvatarImage src={user[3]} />}
-            <AvatarFallback>{"Dot"}</AvatarFallback>
+            <AvatarFallback>{"AN"}</AvatarFallback>
           </Avatar>
           <h1 className="text-white text-sm mx-3">{user[1]}</h1>
         </div>
@@ -32,39 +32,8 @@ const PostTab = (props) => {
         </Button>
       </div>
 
-      {/* Post Title */}
-      <h1 className="text-xl font-bold text-white mb-5">{props.post.title}</h1>
-
       {/* Post Content */}
-      <div className="w-full flex flex-col max-h-[120px] overflow-hidden mb-5 postTabGradient">
-        {props.post.content.map((paragraph, index) => {
-          if (paragraph.type === "Heading")
-            return (
-              <h1
-                key={index}
-                className="text-base text-transparent font-bold mb-5"
-              >
-                {paragraph.content}
-              </h1>
-            );
-          else if (paragraph.type === "Paragraph")
-            return (
-              <p key={index} className="text-sm text-transparent mb-5">
-                {paragraph.content}
-              </p>
-            );
-        })}
-      </div>
-
-      {/* Post Cover */}
-
-      <Image
-        src={props.post.cover}
-        alt="Post Cover"
-        height={500}
-        width={1000}
-        className="rounded-xl object-cover w-full h-[300px] mb-5"
-      />
+      <p className="text-sm text-zinc-400 mb-5 mt-2">{props.post.content}</p>
 
       {/* Post Like Button */}
       <div className="w-full flex justify-between items-center">
@@ -79,4 +48,4 @@ const PostTab = (props) => {
   );
 };
 
-export default PostTab;
+export default ThoughtTab;
