@@ -8,6 +8,7 @@ const initialState = {
   currentTab: "feed",
   web3Auth: null,
   provider: null,
+  editor: null,
 };
 
 export const defaultSlice = createSlice({
@@ -46,6 +47,9 @@ export const defaultSlice = createSlice({
     setSelectedAddress: (state, action) => {
       state.selectedAddress = action.payload;
     },
+    setEditor: (state, action) => {
+      state.editor = action.payload;
+    },
   },
 });
 
@@ -60,4 +64,5 @@ export const {
   setCurrentTab,
   initiateLoggedIn,
   setSelectedAddress,
+  setEditor,
 } = defaultSlice.actions;
