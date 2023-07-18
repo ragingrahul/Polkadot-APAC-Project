@@ -28,6 +28,7 @@ const UserTab = () => {
               height={500}
               className="w-full h-full object-cover rounded-2xl rounded-b-[19px]"
               alt="ProfilePic"
+              unoptimized={true}
             />
           </div>
 
