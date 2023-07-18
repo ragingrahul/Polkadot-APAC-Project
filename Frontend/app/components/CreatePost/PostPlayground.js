@@ -18,7 +18,6 @@ import {
 import { Toggle } from "@/components/ui/toggle";
 import { useDispatch } from "react-redux";
 import { setEditor } from "@/redux/defaultSlice";
-import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -61,6 +60,7 @@ const PostPlayground = () => {
         style={{
           width: coverImage ? "100%" : "fit-content",
           height: coverImage ? "400px" : "fit-content",
+          marginTop: coverImage ? "20px" : "0px",
         }}
       >
         {coverImage ? (
