@@ -6,3 +6,10 @@ export const getProfile = async (evmAddress) => {
   );
   return res.data;
 };
+
+export const getPost=async(ipfsLink)=>{
+  const res=await axios.get(
+    ipfsLink
+  )
+  return res.data;
+}
