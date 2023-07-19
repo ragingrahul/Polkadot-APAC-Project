@@ -33,6 +33,7 @@ const SettingSection = () => {
     dispatch(fetchLoggedInUser(evmAddress));
   }, [evmAddress]);
 
+
   return (
     <>
       {loggedInUser && (
@@ -167,6 +168,7 @@ const SettingSection = () => {
               <Button
                 disabled={isLoading}
                 className="bg-white text-black hover:bg-gray-300 hover:text-black w-[190px]"
+                
               >
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
