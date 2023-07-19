@@ -4,6 +4,7 @@ const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const Post = require("../../models/posts");
+const User = require("../../models/users");
 
 //Get All Post
 router.get("/all", (req, res) => {
@@ -32,7 +33,14 @@ router.get("/user/:address", (req, res) => {
 //Get Post by ID
 router.get("/:id", (req, res) => {
   Post.findById(req.params.id)
-    .then((post) => res.json(post))
+    .then((post) => {
+      const user = User.findOne({ evmAddress: post.evmAddress });
+      if (user) {
+        user.views += 1;
+        user.save();
+      }
+      res.json(post);
+    })
     .catch((err) => res.json({ error: err }));
 });
 
