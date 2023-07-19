@@ -2,25 +2,21 @@
 
 import { WsProvider, ApiPromise, Keyring } from '@polkadot/api'
 import { ethers } from 'ethers'
-import { dotComUserContract } from '@/utils/constants'
+import { dotComPostContract } from '@/utils/constants'
 
-let ABI = ["function initializeUser(string memory name,string memory avatar,string memory bio,uint256 dob)"]
+let ABI = ["function mintPostNFT(address dotter,string memory tokenURI)"]
 
-//Calculate Function CallData
-const calculateInitializeUserCallData = async (name, avatar, bio, dob) => {
+const calculateMintPostCallData = async (address,tokenURI) => {
     let iface = new ethers.utils.Interface(ABI)
 
     let data = [
-        name,
-        avatar,
-        bio,
-        dob
+        address,
+        tokenURI
     ]
-    const hex = iface.encodeFunctionData("initializeUser", data)
+    const hex = iface.encodeFunctionData("mintPostNFT", data)
     return hex
 }
 
-//Generating Moonbeam Encoded CallData
 const moonBeamData = async (contractCall) => {
     const wsProviderAlpha = new WsProvider("wss://wss.api.moonbase.moonbeam.network")
     const apiAlpha = await ApiPromise.create({ provider: wsProviderAlpha })
@@ -28,7 +24,7 @@ const moonBeamData = async (contractCall) => {
     const callParams = {
         V2: {
             gasLimit: 710000n,
-            action: { Call: dotComUserContract },
+            action: { Call: dotComPostContract },
             value: 0,
             input: contractCall,
         }
@@ -39,7 +35,6 @@ const moonBeamData = async (contractCall) => {
     return encodedCall
 }
 
-//XCM message Call Data
 const xcmMessage = async (evmAddress, moonbeamSCALE) => {
     const wsProviderRelayChain = new WsProvider("wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network")
     const apiRelayChain = await ApiPromise.create({ provider: wsProviderRelayChain })
@@ -101,14 +96,14 @@ const xcmMessage = async (evmAddress, moonbeamSCALE) => {
 
 }
 
-export const initializeUser = async (evmAddress, name, avatar, bio, dob) => {
+export const createPost = async (evmAddress, tokenURI) => {
 
     // const wsProviderRelayChain=new WsProvider("wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network")
 
 
     // const apiRelayChain=await ApiPromise.create({wsProviderRelayChain})
 
-    const contractCallData = await calculateInitializeUserCallData(name, avatar, bio, dob)
+    const contractCallData = await calculateMintPostCallData(evmAddress,tokenURI)
     const moonbeamEncodedData = await moonBeamData(contractCallData)
     const xcmCallData = await xcmMessage(evmAddress, moonbeamEncodedData)
     return xcmCallData

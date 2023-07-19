@@ -9,8 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { useDispatch,useSelector } from "react-redux";
 import {
   initiateOnboarding,
-  setEvmAddress,
-  setPolkadotAddress,
+  setLoginMethod
 } from "@/redux/defaultSlice";
 import { useWeb3Auth,useWallet } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
@@ -39,6 +38,7 @@ const ConnectSection = () => {
     try {
       setIsLoading(true)
       await loginWithEmail({email:email})
+      dispatch(setLoginMethod("email"))
       dispatch(initiateOnboarding());
     } catch (error) {
       console.error(error)
@@ -53,6 +53,7 @@ const ConnectSection = () => {
       
       const address= await connectWallet()
       console.log(address)
+      dispatch(setLoginMethod("wallet"))
       dispatch(initiateOnboarding());
     }catch(error){
       console.error(error)
