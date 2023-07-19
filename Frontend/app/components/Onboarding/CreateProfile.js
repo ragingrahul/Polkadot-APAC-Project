@@ -35,6 +35,7 @@ const CreateProfile = () => {
   const evmAddress = useSelector((state) => state.default.evmAddress);
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const provider = useSelector((state) => state.default.provider);
+  const loginMethod=useSelector((state)=>state.default.loginMethod)
 
   const createProfile = async () => {
     const { web3Enable, web3FromAddress } = await import(
@@ -251,7 +252,16 @@ const CreateProfile = () => {
           <Button
             disabled={isLoading}
             className="bg-white text-black hover:bg-gray-300 hover:text-black w-[190px]"
-            onClick={createProfileWithWeb3Auth}
+            onClick={
+              ()=>{
+                if(loginMethod==="email"){
+                  createProfileWithWeb3Auth()
+                }
+                else if(loginMethod==="wallet"){
+                  createProfile()
+                }
+              }  
+            }
           >
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

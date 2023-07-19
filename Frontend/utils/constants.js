@@ -1,2 +1,3 @@
 export const dotComUserContract='0x444a911808D18E17Bf4D7eB44Aa4dee09c605248'
+export const dotComPostContract='0x6f922CA8755E6398C3e9d21b8f3487b6Cc3d9160'
 export const clientId='BHU28_3aSDIzfxbmGoAxn8D8X3Dctu1qZiCN12N_ztH_rgSjZJK1FasQiyqYRxiYIpjP1O6g3FgOTCQ3BQRnlgE'
