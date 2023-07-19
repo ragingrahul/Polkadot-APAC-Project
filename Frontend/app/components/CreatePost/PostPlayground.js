@@ -16,14 +16,14 @@ import {
   Undo,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
-import { useDispatch } from "react-redux";
-import { setEditor } from "@/redux/defaultSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setEditor, setTitle, setCover } from "@/redux/defaultSlice";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 const PostPlayground = () => {
-  const [title, setTitle] = React.useState("");
-  const [coverImage, setCoverImage] = React.useState(null);
+  const title = useSelector((state) => state.default.title);
+  const cover = useSelector((state) => state.default.cover);
   const dispatch = useDispatch();
   const imgRef = React.useRef(null);
   const router = useRouter();
@@ -58,17 +58,17 @@ const PostPlayground = () => {
         }}
         className="hover:cursor-pointer flex justify-center items-center"
         style={{
-          width: coverImage ? "100%" : "fit-content",
-          height: coverImage ? "400px" : "fit-content",
-          marginTop: coverImage ? "20px" : "0px",
+          width: cover ? "100%" : "fit-content",
+          height: cover ? "400px" : "fit-content",
+          marginTop: cover ? "20px" : "0px",
         }}
       >
-        {coverImage ? (
+        {cover ? (
           <img
             onClick={() => {
               imgRef?.current?.click();
             }}
-            src={URL.createObjectURL(coverImage)}
+            src={URL.createObjectURL(cover)}
             alt="avatar"
             className="w-full h-full object-cover"
           />
@@ -85,7 +85,7 @@ const PostPlayground = () => {
         ref={imgRef}
         onChange={(e) => {
           if (!e.target.files) return;
-          setCoverImage(e.target.files[0]);
+          dispatch(setCover(e.target.files[0]));
           console.log(e.target.files[0].type);
         }}
       />
@@ -93,7 +93,7 @@ const PostPlayground = () => {
       {/* Title */}
       <input
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => dispatch(setTitle(e.target.value))}
         placeholder="Title..."
         className=" focus:outline-none text-white text-5xl mt-5 font-bold bg-transparent"
       />

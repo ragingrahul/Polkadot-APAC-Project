@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 
 const PostPrompt = () => {
   const editor = useSelector((state) => state.default.editor);
+  const title = useSelector((state) => state.default.title);
+  const cover = useSelector((state) => state.default.cover);
+
   return (
     <div className="w-full h-full flex flex-col relative justify-center p-20">
       <div className="absolute top-0 right-0">
@@ -35,7 +38,11 @@ const PostPrompt = () => {
         <div className="flex flex-col space-y-7 ">
           <Button
             className="bg-black relative hover:bg-zinc-800 border-2 group border-zinc-800 h-[200px] w-[400px] p-6 flex justify-between items-start flex-col"
-            onClick={() => console.log(editor.getJSON())}
+            onClick={() => {
+              console.log(editor.getJSON());
+              console.log(title);
+              console.log(cover);
+            }}
           >
             <div className="flex flex-col space-y-1 items-start">
               <h1 className="text-2xl font-semibold tracking-tight text-white">

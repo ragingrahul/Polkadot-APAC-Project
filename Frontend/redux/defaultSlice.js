@@ -9,6 +9,8 @@ const initialState = {
   web3Auth: null,
   provider: null,
   editor: null,
+  cover: null,
+  title: "",
 };
 
 export const defaultSlice = createSlice({
@@ -50,6 +52,12 @@ export const defaultSlice = createSlice({
     setEditor: (state, action) => {
       state.editor = action.payload;
     },
+    setTitle: (state, action) => {
+      state.title = action.payload;
+    },
+    setCover: (state, action) => {
+      state.cover = action.payload;
+    },
   },
 });
 
@@ -65,4 +73,6 @@ export const {
   initiateLoggedIn,
   setSelectedAddress,
   setEditor,
+  setTitle,
+  setCover,
 } = defaultSlice.actions;
