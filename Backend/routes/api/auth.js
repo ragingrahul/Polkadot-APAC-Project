@@ -5,6 +5,8 @@ require("dotenv").config();
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
+const User = require("../../models/users");
+
 // @route   GET api/auth
 // @desc    Validate Signature
 // @access  Public
@@ -22,7 +24,10 @@ router.get("/", auth, (req, res) => {
 // @access  Public
 router.post(
   "/",
-  [check("sign", "Signature is required").not().isEmpty()],
+  [
+    check("sign", "Signature is required").not().isEmpty(),
+    check("evmAddress", "Address is required").not().isEmpty(),
+  ],
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -30,6 +35,17 @@ router.post(
     }
 
     try {
+      const user = User.findOne({ evmAddress: req.address });
+
+      if (!user) {
+        const newUser = new User({
+          address: req.address,
+          evmAddress: req.body.evmAddress,
+        });
+
+        newUser.save();
+      }
+
       const payload = {
         sign: req.body.sign,
       };
