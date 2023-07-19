@@ -17,8 +17,84 @@ const PostPrompt = () => {
   const evmAddress = useSelector((state) => state.default.evmAddress)
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress)
   const provider = useSelector((state) => state.default.provider);
+  const loginMethod = useSelector((state) => state.default.loginMethod)
 
-
+  const createWeb3PostWallet = async () => {
+    const { web3Enable, web3FromAddress } = await import(
+      "@polkadot/extension-dapp"
+    );
+    if (!cover || !title || !editor.getJSON().content[0].content) {
+      window.alert("Cannot keep any field empty")
+      return
+    }
+    const providerWsURL =
+      "wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network";
+    const substrateProvider = new WsProvider(providerWsURL);
+    const api = await ApiPromise.create({ provider: substrateProvider });
+    const extension = await web3Enable("dotUser");
+    const injector = await web3FromAddress(polkadotAddress);
+    const cidImage = await saveToIPFS(cover)
+    const postMetadata = {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": title
+        },
+        "description": {
+          "type": "string",
+          "description": "Post on dotCom Network"
+        },
+        "image": {
+          "type": "string",
+          "description": `${cidImage}.ipfs.w3s.link`
+        },
+        "evmAddress": {
+          "type": "string",
+          "description": evmAddress
+        },
+        "polkadotAddress": {
+          "type": "string",
+          "description": polkadotAddress
+        },
+        "content": {
+          "type": "string",
+          "description": editor.getJSON()
+        },
+        "web": {
+          "type": "string",
+          "description": "3"
+        },
+        "date": {
+          "type": "string",
+          "description": Date.now()
+        },
+        "chain": {
+          "type": "string",
+          "description": "polkadot"
+        }
+      }
+    }
+    const file = new File([JSON.stringify(postMetadata)], 'file.json', { type: 'application/json' })
+    const cidPost = await saveToIPFS(file)
+    const xcmCallData = await createPost(
+      evmAddress,
+      `${cidPost}.ipfs.w3s.link`
+    )
+    const tx = await api
+        .tx(xcmCallData)
+        .signAndSend(
+          polkadotAddress,
+          { signer: injector.signer },
+          ({ result }) => {
+            console.log(`Transaction Sent`);
+            if (Result.status.isInBlock) {
+              console.log(
+                `Transaction include in blockhash ${result.status.asInBlock}`
+              );
+            }
+          }
+        );
+  }
 
   const createWeb3PostW3A = async () => {
 
@@ -108,8 +184,7 @@ const PostPrompt = () => {
           <Button
             className="bg-black relative hover:bg-zinc-800 border-2 group border-zinc-800 h-[200px] w-[400px] p-6 flex justify-between items-start flex-col"
             onClick={() => {
-              console.log(evmAddress)
-              console.log(provider)
+              console.log(loginMethod)
             }}
           >
             <div className="flex flex-col space-y-1 items-start">
@@ -129,7 +204,14 @@ const PostPrompt = () => {
           </Button>
 
           <Button className="bg-black relative hover:bg-zinc-800 border-2 group border-zinc-800 h-[200px] w-[400px] p-6 flex justify-between items-start flex-col"
-            onClick={createWeb3PostW3A}
+            onClick={
+              ()=>{
+                if(loginMethod==="email")
+                  createWeb3PostW3A()
+                else if(loginMethod==="wallet")
+                  createWeb3PostWallet()
+              }
+            }
           >
             <div className="flex flex-col space-y-1 items-start">
               <h1 className="text-2xl font-semibold tracking-tight text-white">
