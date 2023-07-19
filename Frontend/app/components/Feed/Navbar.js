@@ -22,6 +22,7 @@ import NavButton from "./NavButton";
 import { setCurrentTab } from "@/redux/defaultSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLoggedInUser } from "@/redux/dataSlice";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [walletToggle, setWalletToggle] = React.useState(false);
@@ -30,6 +31,7 @@ const Navbar = () => {
   const evmAddress = useSelector((state) => state.default.evmAddress);
   const user = useSelector((state) => state.data.loggedInUser);
   const dispatch = useDispatch();
+  const router=useRouter()
 
   React.useEffect(() => {
     dispatch(fetchLoggedInUser(evmAddress));
@@ -94,7 +96,7 @@ const Navbar = () => {
 
         {/* Post Button */}
         <div className="flex items-center justify-center mr-10 space-x-5">
-          <Button className="bg-[color:var(--feed-foreground)] hover:bg-zinc-800">
+          <Button className="bg-[color:var(--feed-foreground)] hover:bg-zinc-800" onClick={()=>router.push('/create')}>
             <Pencil className="w-4 mr-2" /> Post
           </Button>
 
