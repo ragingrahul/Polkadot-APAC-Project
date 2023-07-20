@@ -132,16 +132,6 @@ const ConnectSection = () => {
           Connect
         </Button>
         
-        <Button
-          disabled={isLoading}
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-          onClick={logout}
-        >
-          Logout
-        </Button>
         <p className="px-8 text-center text-sm text-muted-foreground">
           By connecting your wallet, you agree to our{" "}
           <Link
