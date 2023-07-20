@@ -2,18 +2,45 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
+const { ethers, JsonRpcProvider } = require("ethers");
 
 const Post = require("../../models/posts");
 const User = require("../../models/users");
 
-//Get All Post
+const dotComPostAddress = "0x5cfd2c52F1224cca3cfFd2a49eA37423F48c8fB8"
+let ABI = [
+  "function _tokenIds() public view returns(uint256)",
+  "function tokenURI(uint256) public view returns(string)"
+]
+
+//Get web3 Post
+router.get("/web3/all", async (req, res) => {
+  try {
+    const provider = new JsonRpcProvider(
+      "https://rpc.api.moonbase.moonbeam.network"
+    );
+    const contract = new ethers.Contract(dotComPostAddress, ABI, provider);
+    const tokenId = await contract._tokenIds()
+    const URIs=[]
+    for(i=1;i<=tokenId;i++){
+      const metaDataLink=await contract.tokenURI(tokenId)
+      URIs.push(metaDataLink)
+    }
+    const web3Posts=URIs
+    res.json(web3Posts)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send("Server Error")
+  }
+
+})
+//Get web2 posts
 router.get("/all", (req, res) => {
   Post.find()
     .sort({ date: -1 })
     .then((posts) => res.json(posts))
     .catch((err) => res.json({ error: err }));
 });
-
 //Get User Post
 router.get("/user", auth, (req, res) => {
   Post.find({ address: req.address })
