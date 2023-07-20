@@ -5,11 +5,11 @@ import { ethers } from 'ethers'
 import { dotComUserContract } from '@/utils/constants'
 
 let ABI = [
-    "function initializeUser(string memory name,string memory avatar,string memory bio,uint256 dob)",
+    "function updateUser(string memory name,string memory avatar,string memory bio,uint256 dob)",
 ]
 
 //Calculate Function CallData
-const calculateInitializeUserCallData = async (name, avatar, bio, dob) => {
+const calculateUpdateUserCallData = async (name, avatar, bio, dob) => {
     let iface = new ethers.utils.Interface(ABI)
 
     let data = [
@@ -18,7 +18,7 @@ const calculateInitializeUserCallData = async (name, avatar, bio, dob) => {
         bio,
         dob
     ]
-    const hex = iface.encodeFunctionData("initializeUser", data)
+    const hex = iface.encodeFunctionData("updateUser", data)
     return hex
 }
 
@@ -103,14 +103,14 @@ const xcmMessage = async (evmAddress, moonbeamSCALE) => {
 
 }
 
-export const initializeUser = async (evmAddress, name, avatar, bio, dob) => {
+export const updateUser = async (evmAddress, name, avatar, bio, dob) => {
 
     // const wsProviderRelayChain=new WsProvider("wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network")
 
 
     // const apiRelayChain=await ApiPromise.create({wsProviderRelayChain})
 
-    const contractCallData = await calculateInitializeUserCallData(name, avatar, bio, dob)
+    const contractCallData = await calculateUpdateUserCallData(name, avatar, bio, dob)
     const moonbeamEncodedData = await moonBeamData(contractCallData)
     const xcmCallData = await xcmMessage(evmAddress, moonbeamEncodedData)
     return xcmCallData
