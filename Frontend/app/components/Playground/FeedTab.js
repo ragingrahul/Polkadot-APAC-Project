@@ -16,7 +16,7 @@ const FeedTab = () => {
 
   React.useEffect(() => {
     console.log(data);
-  }, []);
+  }, [data]);
 
   return (
     <div className="flex flex-col w-full space-y-5 pb-5 overflow-x-hidden">

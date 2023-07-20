@@ -7,11 +7,11 @@ const { ethers, JsonRpcProvider } = require("ethers");
 const Post = require("../../models/posts");
 const User = require("../../models/users");
 
-const dotComPostAddress = "0x5cfd2c52F1224cca3cfFd2a49eA37423F48c8fB8"
+const dotComPostAddress = "0x5cfd2c52F1224cca3cfFd2a49eA37423F48c8fB8";
 let ABI = [
   "function _tokenIds() public view returns(uint256)",
-  "function tokenURI(uint256) public view returns(string)"
-]
+  "function tokenURI(uint256) public view returns(string)",
+];
 
 //Get web3 Post
 router.get("/web3/all", async (req, res) => {
@@ -20,20 +20,20 @@ router.get("/web3/all", async (req, res) => {
       "https://rpc.api.moonbase.moonbeam.network"
     );
     const contract = new ethers.Contract(dotComPostAddress, ABI, provider);
-    const tokenId = await contract._tokenIds()
-    const URIs=[]
-    for(i=1;i<=tokenId;i++){
-      const metaDataLink=await contract.tokenURI(tokenId)
-      URIs.push(metaDataLink)
+    const tokenId = await contract._tokenIds();
+    const URIs = [];
+    for (i = 1; i <= tokenId; i++) {
+      const metaDataLink = await contract.tokenURI(tokenId);
+      URIs.push(metaDataLink);
     }
-    const web3Posts=URIs
-    res.json(web3Posts)
+    const web3Posts = URIs;
+    res.json(web3Posts);
   } catch (error) {
-    console.error(error)
-    res.status(500).send("Server Error")
+    console.error(error);
+    res.status(500).send("Server Error");
   }
+});
 
-})
 //Get web2 posts
 router.get("/all", (req, res) => {
   Post.find()
@@ -41,6 +41,7 @@ router.get("/all", (req, res) => {
     .then((posts) => res.json(posts))
     .catch((err) => res.json({ error: err }));
 });
+
 //Get User Post
 router.get("/user", auth, (req, res) => {
   Post.find({ address: req.address })
@@ -69,6 +70,21 @@ router.get("/:id", (req, res) => {
       res.json(post);
     })
     .catch((err) => res.json({ error: err }));
+});
+
+router.get("/web3/:id", async (req, res) => {
+  try {
+    const provider = new JsonRpcProvider(
+      "https://rpc.api.moonbase.moonbeam.network"
+    );
+    const contract = new ethers.Contract(dotComPostAddress, ABI, provider);
+    const metaDataLink = await contract.tokenURI(req.params.id);
+    const web3Post = metaDataLink;
+    res.json(web3Post);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
 });
 
 //Create Post
