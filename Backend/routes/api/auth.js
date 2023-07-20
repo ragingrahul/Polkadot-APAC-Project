@@ -7,10 +7,10 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../../models/users");
 
-// @route   GET api/auth
+// @route   Post api/auth/check
 // @desc    Validate Signature
 // @access  Public
-router.get("/", auth, (req, res) => {
+router.post("/check", auth, (req, res) => {
   try {
     res.json({ msg: "Logged In" });
   } catch (error) {
