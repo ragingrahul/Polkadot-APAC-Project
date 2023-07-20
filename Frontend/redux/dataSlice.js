@@ -45,11 +45,20 @@ export const fetchLoggedInUser = createAsyncThunk(
 //Fetch all data
 export const fetchAlldata = createAsyncThunk("data/fetchAlldata", async () => {
   try {
-    const posts = await axios.get("https://dotcombackend.me/api/post/all");
+    const posts = await axios.get("https://dotcombackend.me/api/post/web3/all");
+    const web2post = await axios.get("https://dotcombackend.me/api/post/all");
+    var uriJson = [];
+    console.log(posts.data[0]);
+    await Promise.all(
+      posts.data.map(async (post) => {
+        const uri = await axios.get(`https://` + post);
+        uriJson.push(uri.data);
+      })
+    );
     const thoughts = await axios.get(
       "https://dotcombackend.me/api/thought/all"
     );
-    const res = posts.data.concat(thoughts.data);
+    const res = web2post.data.concat(uriJson.concat(thoughts.data));
     return res;
   } catch {
     console.log(error);
