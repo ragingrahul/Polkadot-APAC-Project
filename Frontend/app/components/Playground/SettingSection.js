@@ -14,8 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { Textarea } from "@/components/ui/textarea";
+import { previousOnboardingStep } from "@/redux/defaultSlice";
+import { updateUser } from "@/app/hooks/updateUserXCM";
+import { saveToIPFS } from "@/app/hooks/saveToIPFS";
+import { WsProvider, ApiPromise } from "@polkadot/api";
+import RPC from "../../../utils/polkadotRPC";
 
 const SettingSection = () => {
   const loggedInUser = useSelector((state) => state.data.loggedInUser);
@@ -27,11 +32,79 @@ const SettingSection = () => {
   const [avatar, setAvatar] = React.useState();
   const maxDate = subYears(new Date(), 18);
   const dispatch = useDispatch();
+  const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
+  const provider = useSelector((state) => state.default.provider);
+  const loginMethod=useSelector((state)=>state.default.loginMethod)
+
+  const updateProfile = async () => {
+    const { web3Enable, web3FromAddress } = await import(
+      "@polkadot/extension-dapp"
+    );
+    if (!name || !bio || !date || !avatar) window.alert("Fill all fields");
+    else {
+      const cid = await saveToIPFS(avatar);
+      const cidLink=cid+".ipfs.w3s.link/"
+      const unixDate = parseInt(date.getTime() / 1000);
+      const providerWsURL =
+        "wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network";
+      const substrateProvider = new WsProvider(providerWsURL);
+      const api = await ApiPromise.create({ provider: substrateProvider });
+      const xcmCallData = await updateUser(
+        evmAddress,
+        name,
+        cidLink,
+        bio,
+        unixDate
+      );
+      const extension = await web3Enable("dotUser");
+      const injector = await web3FromAddress(polkadotAddress);
+
+      const tx = await api
+        .tx(xcmCallData)
+        .signAndSend(
+          polkadotAddress,
+          { signer: injector.signer },
+          ({ result }) => {
+            console.log(`Transaction Sent`);
+            if (Result.status.isInBlock) {
+              console.log(
+                `Transaction include in blockhash ${result.status.asInBlock}`
+              );
+            }
+          }
+        );
+    }
+  };
+
+  const updateProfileWithWeb3Auth = async () => {
+    if (!name || !bio || !date || !avatar) window.alert("Fill all fields");
+    else {
+      const cid = await saveToIPFS(avatar);
+      const cidLink=cid+".ipfs.w3s.link/"
+      const unixDate = parseInt(date.getTime() / 1000);
+      const xcmCallData = await updateUser(
+        evmAddress,
+        name,
+        cidLink,
+        bio,
+        unixDate
+      );
+      console.log(xcmCallData);
+      const rpc = new RPC(provider);
+      const keyPair = await rpc.getPolkadotKeyPair();
+      const api = await rpc.makeClient();
+      const tx = await api.tx(xcmCallData).signAndSend(keyPair);
+      console.log(tx);
+    }
+  };
+
+
 
   React.useEffect(() => {
     if (!loggedInUser) return;
     dispatch(fetchLoggedInUser(evmAddress));
   }, [evmAddress]);
+  
 
 
   return (
@@ -168,7 +241,16 @@ const SettingSection = () => {
               <Button
                 disabled={isLoading}
                 className="bg-white text-black hover:bg-gray-300 hover:text-black w-[190px]"
-                
+                onClick={
+                  ()=>{
+                    if(loginMethod==="email"){
+                      updateProfileWithWeb3Auth()
+                    }
+                    else if(loginMethod==="wallet"){
+                      updateProfile()
+                    }
+                  }
+                }
               >
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
