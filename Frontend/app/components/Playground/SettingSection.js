@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
 import { fetchLoggedInUser } from "@/redux/dataSlice";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { subYears, format } from "date-fns";
