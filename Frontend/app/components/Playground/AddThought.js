@@ -58,7 +58,7 @@ const AddThought = () => {
           {/* Profile Nam & Logo */}
           <div className="flex items-center mb-7">
             <Avatar>
-              <AvatarImage src={user[3]} />
+              <AvatarImage src={"https://" + user[3]} />
               <AvatarFallback>{"AN"}</AvatarFallback>
             </Avatar>
             <h1 className="text-white text-sm mx-3">{user[1]}</h1>

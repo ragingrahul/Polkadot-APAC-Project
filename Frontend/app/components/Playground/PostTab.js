@@ -141,6 +141,7 @@ const PostTab = (props) => {
         height={500}
         width={1000}
         className="rounded-xl object-cover w-full h-[300px] mb-5"
+        unoptimized={true}
       />
 
       {/* Post Like Button */}
