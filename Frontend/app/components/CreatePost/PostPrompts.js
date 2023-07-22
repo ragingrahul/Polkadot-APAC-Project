@@ -9,6 +9,7 @@ import { saveToIPFS } from "@/app/hooks/saveToIPFS";
 import { createPost } from "@/app/hooks/createPostXCM";
 import { WsProvider, ApiPromise } from "@polkadot/api";
 import RPC from "../../../utils/polkadotRPC";
+import { postPost } from "@/app/api/getProfile";
 
 const PostPrompt = () => {
   const editor = useSelector((state) => state.default.editor);
@@ -159,6 +160,21 @@ const PostPrompt = () => {
     console.log(tx);
   };
 
+  const createWeb2Post = async () => {
+    if (!cover || !title || !editor.getJSON().content[0].content) {
+      window.alert("Cannot keep any field empty");
+      return;
+    }
+    const cidImage = await saveToIPFS(cover);
+    await postPost(
+      polkadotAddress,
+      evmAddress,
+      title,
+      `${cidImage}.ipfs.w3s.link`,
+      editor.getJSON()
+    );
+  };
+
   return (
     <div className="w-full h-full flex flex-col relative justify-center p-20">
       <div className="absolute top-0 right-0">
@@ -186,9 +202,7 @@ const PostPrompt = () => {
         <div className="flex flex-col space-y-7 ">
           <Button
             className="bg-black relative hover:bg-zinc-800 border-2 group border-zinc-800 h-[200px] w-[400px] p-6 flex justify-between items-start flex-col"
-            onClick={() => {
-              console.log(loginMethod);
-            }}
+            onClick={createWeb2Post}
           >
             <div className="flex flex-col space-y-1 items-start">
               <h1 className="text-2xl font-semibold tracking-tight text-white">

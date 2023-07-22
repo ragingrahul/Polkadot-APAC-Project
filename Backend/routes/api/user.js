@@ -34,13 +34,8 @@ router.get("/evm/:address", async (req, res) => {
 
 router.get("/evm/:address/followers", async (req, res) => {
   try {
-    User.find({ following: req.params.address }, (err, users) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
-      } else {
-        res.json(users);
-      }
+    User.find({ following: req.params.address }).then((users) => {
+      res.json(users);
     });
   } catch (err) {
     console.error(err.message);
@@ -50,13 +45,13 @@ router.get("/evm/:address/followers", async (req, res) => {
 
 router.get("/evm/:address/following", async (req, res) => {
   try {
-    User.findOne({ evmAddress: req.params.address }, (err, user) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
-      } else {
-        res.json(user.following);
+    User.findOne({ evmAddress: req.params.address }).then((user) => {
+      if (!user) {
+        res.json([]);
       }
+      User.find({ following: user.evmAddress }).then((users) => {
+        res.json(users.map((user) => user.evmAddress) || []);
+      });
     });
   } catch (err) {
     console.error(err.message);
@@ -66,13 +61,8 @@ router.get("/evm/:address/following", async (req, res) => {
 
 router.get("/evm/:address/views", async (req, res) => {
   try {
-    User.findOne({ evmAddress: req.params.address }, (err, user) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
-      } else {
-        res.json(user.views);
-      }
+    User.findOne({ evmAddress: req.params.address }).then((user) => {
+      res.json(user.views);
     });
   } catch (err) {
     console.error(err.message);
@@ -87,6 +77,7 @@ router.post("/evm/:address/follow", auth, async (req, res) => {
     if (user.following.includes(reqUser.evmAddress)) {
       res.status(400).json({ msg: "User already followed" });
     } else {
+      if (!user.following) user.following = [];
       user.following.push(reqUser.evmAddress);
       await user.save();
       res.json(user.following);

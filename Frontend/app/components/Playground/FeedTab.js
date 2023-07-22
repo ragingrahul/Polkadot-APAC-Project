@@ -5,6 +5,7 @@ import PostTab from "./PostTab";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAlldata } from "@/redux/dataSlice";
 import ThoughtTab from "./ThoughtTab";
+import Web3PostTab from "./Web3PostTab";
 
 const FeedTab = () => {
   const data = useSelector((state) => state.data.data);
@@ -25,6 +26,7 @@ const FeedTab = () => {
         if (post.type === "post") return <PostTab key={index} post={post} />;
         if (post.type === "thought")
           return <ThoughtTab key={index} post={post} />;
+        else return <Web3PostTab key={index} post={post.properties} />;
       })}
     </div>
   );

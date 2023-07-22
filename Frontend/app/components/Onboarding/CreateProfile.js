@@ -23,6 +23,9 @@ import { initializeUser } from "@/app/hooks/initializeUserXCM";
 import { saveToIPFS } from "@/app/hooks/saveToIPFS";
 import { WsProvider, ApiPromise } from "@polkadot/api";
 import RPC from "../../../utils/polkadotRPC";
+import { login } from "@/app/api/getProfile";
+import { useRouter } from "next/navigation";
+import { stringToHex } from "@polkadot/util";
 
 const CreateProfile = () => {
   const [name, setName] = React.useState();
@@ -35,7 +38,23 @@ const CreateProfile = () => {
   const evmAddress = useSelector((state) => state.default.evmAddress);
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const provider = useSelector((state) => state.default.provider);
-  const loginMethod=useSelector((state)=>state.default.loginMethod)
+  const loginMethod = useSelector((state) => state.default.loginMethod);
+  const router = useRouter();
+
+  const Login = async () => {
+    setIsLoading(true);
+    const { web3FromAddress } = await import("@polkadot/extension-dapp");
+    const injector = await web3FromAddress(polkadotAddress);
+    const { signature } = await injector.signer.signRaw({
+      address: polkadotAddress,
+      data: stringToHex(
+        "Welcome to DotCom. Please read the terms and conditions before using the service."
+      ),
+      type: "bytes",
+    });
+    await login(evmAddress, signature);
+    setIsLoading(false);
+  };
 
   const createProfile = async () => {
     const { web3Enable, web3FromAddress } = await import(
@@ -66,7 +85,7 @@ const CreateProfile = () => {
           { signer: injector.signer },
           ({ result }) => {
             console.log(`Transaction Sent`);
-            if (Result.status.isInBlock) {
+            if (result.status.isInBlock) {
               console.log(
                 `Transaction include in blockhash ${result.status.asInBlock}`
               );
@@ -252,16 +271,15 @@ const CreateProfile = () => {
           <Button
             disabled={isLoading}
             className="bg-white text-black hover:bg-gray-300 hover:text-black w-[190px]"
-            onClick={
-              ()=>{
-                if(loginMethod==="email"){
-                  createProfileWithWeb3Auth()
-                }
-                else if(loginMethod==="wallet"){
-                  createProfile()
-                }
-              }  
-            }
+            onClick={async () => {
+              if (loginMethod === "email") {
+                await createProfileWithWeb3Auth();
+              } else if (loginMethod === "wallet") {
+                await createProfile();
+              }
+              await Login();
+              router.push("/feed");
+            }}
           >
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

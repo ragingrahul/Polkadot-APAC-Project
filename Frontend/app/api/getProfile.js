@@ -12,10 +12,11 @@ export const getPost = async (ipfsLink) => {
   return res.data;
 };
 
-export const login = async (evmAddress, sign) => {
+export const login = async (address, evmAddress, sign) => {
   const res = await axios.post("https://dotcombackend.me/api/auth", {
-    evmAddress,
-    sign,
+    sign: sign,
+    address: address,
+    evmAddress: evmAddress,
   });
   if (res.data.token) {
     localStorage.setItem("token", res.data.token);
@@ -38,7 +39,7 @@ export const checkLogin = async (address) => {
   return res.data;
 };
 
-export const postThought = async (evmAddress, content, type) => {
+export const postThought = async (address, evmAddress, content, type) => {
   const header = {
     headers: {
       "Content-Type": "application/json",
@@ -48,6 +49,7 @@ export const postThought = async (evmAddress, content, type) => {
   const res = await axios.post(
     "https://dotcombackend.me/api/thought",
     {
+      address: address,
       evmAddress,
       content,
       type,
@@ -57,7 +59,7 @@ export const postThought = async (evmAddress, content, type) => {
   return res.data;
 };
 
-export const postPost = async (evmAddress, title, cover, content) => {
+export const postPost = async (address, evmAddress, title, cover, content) => {
   const header = {
     headers: {
       "Content-Type": "application/json",
@@ -67,12 +69,13 @@ export const postPost = async (evmAddress, title, cover, content) => {
   const res = await axios.post(
     "https://dotcombackend.me/api/post",
     {
+      address: address,
       evmAddress,
       title,
       cover,
       content,
       type: "post",
-      web: "3",
+      web: "2",
       chain: "polkadot",
     },
     header
@@ -80,7 +83,7 @@ export const postPost = async (evmAddress, title, cover, content) => {
   return res.data;
 };
 
-export const likeThought = async (id) => {
+export const likeThought = async (address, id) => {
   const header = {
     headers: {
       "Content-Type": "application/json",
@@ -89,13 +92,13 @@ export const likeThought = async (id) => {
   };
   const res = await axios.put(
     `https://dotcombackend.me/api/thought/like/${id}`,
-    {},
+    { address: address },
     header
   );
   return res.data;
 };
 
-export const likePost = async (id) => {
+export const likePost = async (address, id) => {
   const header = {
     headers: {
       "Content-Type": "application/json",
@@ -104,37 +107,37 @@ export const likePost = async (id) => {
   };
   const res = await axios.put(
     `https://dotcombackend.me/api/post/like/${id}`,
-    {},
+    { address: address },
     header
   );
   return res.data;
 };
 
-export const followUser = async (id) => {
+export const followUser = async (address, id) => {
   const header = {
     headers: {
       "Content-Type": "application/json",
       "x-auth-token": localStorage.getItem("token"),
     },
   };
-  const res = await axios.put(
+  const res = await axios.post(
     `https://dotcombackend.me/api/user/evm/${id}/follow`,
-    {},
+    { address: address },
     header
   );
   return res.data;
 };
 
-export const unfollowUser = async (id) => {
+export const unfollowUser = async (address, id) => {
   const header = {
     headers: {
       "Content-Type": "application/json",
       "x-auth-token": localStorage.getItem("token"),
     },
   };
-  const res = await axios.put(
+  const res = await axios.post(
     `https://dotcombackend.me/api/user/evm/${id}/unfollow`,
-    {},
+    { address: address },
     header
   );
   return res.data;

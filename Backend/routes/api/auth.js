@@ -26,24 +26,24 @@ router.post(
   "/",
   [
     check("sign", "Signature is required").not().isEmpty(),
-    check("evmAddress", "Address is required").not().isEmpty(),
+    check("address", "Address is required").not().isEmpty(),
+    check("evmAddress", "EVM Address is required").not().isEmpty(),
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ error: errors.array() });
     }
 
     try {
-      const user = User.findOne({ evmAddress: req.address });
-
+      const user = await User.findOne({ address: req.body.address });
       if (!user) {
         const newUser = new User({
-          address: req.address,
+          address: req.body.address,
           evmAddress: req.body.evmAddress,
+          following: [],
         });
-
-        newUser.save();
+        await newUser.save();
       }
 
       const payload = {
