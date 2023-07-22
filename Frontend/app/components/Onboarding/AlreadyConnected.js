@@ -13,15 +13,18 @@ import { getProfile, login, checkLogin } from "@/app/api/getProfile";
 import { WsProvider } from "@polkadot/api";
 import { stringToHex, stringToU8a } from "@polkadot/util";
 import { useToast } from "@/components/ui/use-toast";
+import { useWeb3Auth } from "@/app/hooks";
 
 const AlreadyConnected = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasProfile, setHasProfile] = React.useState(false);
+  const loginMethod = useSelector((state) => state.default.loginMethod);
   const dispatch = useDispatch();
   const evmAddress = useSelector((state) => state.default.evmAddress);
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const router = useRouter();
   const { toast } = useToast();
+  const { logout } = useWeb3Auth();
 
   const Login = async () => {
     try {
@@ -121,28 +124,33 @@ const AlreadyConnected = () => {
           </Button>
         )}
 
-        <div className="relative  w-[300px]">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-muted-foreground" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-black px-2 text-muted-foreground">Or</span>
-          </div>
-        </div>
-
-        {/* Connect with Wallet */}
-        <Button
-          disabled={isLoading}
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
-          )}
-        >
-          {(isLoading && (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
-          Logout
-        </Button>
+        {loginMethod === "email" && (
+          <>
+            {" "}
+            <div className="relative  w-[300px]">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-muted-foreground" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-black px-2 text-muted-foreground">Or</span>
+              </div>
+            </div>
+            {/* Connect with Wallet */}
+            <Button
+              disabled={isLoading}
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
+              )}
+              onClick={logout}
+            >
+              {(isLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
+              Logout
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
