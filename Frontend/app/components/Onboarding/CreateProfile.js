@@ -26,6 +26,7 @@ import RPC from "../../../utils/polkadotRPC";
 import { login } from "@/app/api/getProfile";
 import { useRouter } from "next/navigation";
 import { stringToHex } from "@polkadot/util";
+import { useToast } from "@/components/ui/use-toast";
 
 const CreateProfile = () => {
   const [name, setName] = React.useState();
@@ -40,20 +41,30 @@ const CreateProfile = () => {
   const provider = useSelector((state) => state.default.provider);
   const loginMethod = useSelector((state) => state.default.loginMethod);
   const router = useRouter();
+  const { toast } = useToast();
 
   const Login = async () => {
-    setIsLoading(true);
-    const { web3FromAddress } = await import("@polkadot/extension-dapp");
-    const injector = await web3FromAddress(polkadotAddress);
-    const { signature } = await injector.signer.signRaw({
-      address: polkadotAddress,
-      data: stringToHex(
-        "Welcome to DotCom. Please read the terms and conditions before using the service."
-      ),
-      type: "bytes",
-    });
-    await login(evmAddress, signature);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const { web3FromAddress } = await import("@polkadot/extension-dapp");
+      const injector = await web3FromAddress(polkadotAddress);
+      const { signature } = await injector.signer.signRaw({
+        address: polkadotAddress,
+        data: stringToHex(
+          "Welcome to DotCom. Please read the terms and conditions before using the service."
+        ),
+        type: "bytes",
+      });
+      await login(polkadotAddress, evmAddress, signature);
+      router.push("/feed");
+    } catch (e) {
+      toast({
+        title: "Unauthorized",
+        description: "Kindly sign the message to continue.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const createProfile = async () => {
@@ -278,7 +289,6 @@ const CreateProfile = () => {
                 await createProfile();
               }
               await Login();
-              router.push("/feed");
             }}
           >
             {isLoading && (
