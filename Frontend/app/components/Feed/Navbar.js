@@ -78,7 +78,7 @@ const Navbar = () => {
 
           {/* Videos Button */}
           <NavButton
-            name="Videos"
+            name="NFT"
             icon={Play}
             isActive={currentTab === "videos"}
             OnClick={() => dispatch(setCurrentTab("videos"))}

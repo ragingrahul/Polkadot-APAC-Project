@@ -50,7 +50,7 @@ const Menu = () => {
       />
       <MenuButton
         icon={Play}
-        name="Videos"
+        name="NFT"
         isActive={currentTab == "videos"}
         OnClick={() => dispatch(setCurrentTab("videos"))}
       />
