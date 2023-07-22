@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  polkadotAddress: "5DkBir9sdbYgxpbUQ2PpPgtQpCznzQy32QpvNWkkKfFqe78S",
-  evmAddress: "0xef7bcb9acb294da0eded2d28f7edcbafd81fb0e2",
+  polkadotAddress: "",
+  evmAddress: "",
   selectedAddress: null,
   onBoardingStep: 0,
   currentTab: "feed",
