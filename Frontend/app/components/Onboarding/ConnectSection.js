@@ -19,16 +19,19 @@ import { Wallet2 } from "lucide-react";
 
 const ConnectSection = () => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [email, setEmail] = React.useState();
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const {initializeWeb3Auth,loginWithEmail,logout}=useWeb3Auth()
   const {connectWallet,sign}=useWallet()
 
-
+  const callInitializeWeb3Auth=async()=>{
+    await initializeWeb3Auth()
+    setIsLoading(false)
+  }
   React.useEffect(()=>{
     
-    initializeWeb3Auth()
+    callInitializeWeb3Auth()
     
   },[polkadotAddress])
   

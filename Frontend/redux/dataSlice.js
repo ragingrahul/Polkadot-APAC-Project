@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   data: [],
   posts: [],
+  web3Posts: [],
   thoughts: [],
   postById: {},
   thoughtById: {},
@@ -99,6 +100,19 @@ export const fetchAllPosts = createAsyncThunk(
     }
   }
 );
+
+export const fetchAllWeb3Posts=createAsyncThunk(
+  "data/fetchAllWeb3Posts",
+  async()=>{
+    try {
+      const posts = await axios.get("https://dotcombackend.me/api/post/web3/all");
+      return posts.data
+    } catch {
+      console.log(error);
+      throw Error(error);
+    }
+  }
+)
 
 //Fetch all thoughts
 export const fetchAllThoughts = createAsyncThunk(
@@ -232,6 +246,17 @@ export const dataSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchAllPosts.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.loading = false;
+      })
+      .addCase(fetchAllWeb3Posts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllWeb3Posts.fulfilled, (state, action) => {
+        state.web3Posts = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchAllWeb3Posts.rejected, (state, action) => {
         state.error = action.error.message;
         state.loading = false;
       })
