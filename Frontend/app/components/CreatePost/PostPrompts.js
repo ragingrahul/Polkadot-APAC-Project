@@ -10,6 +10,8 @@ import { createPost } from "@/app/hooks/createPostXCM";
 import { WsProvider, ApiPromise } from "@polkadot/api";
 import RPC from "../../../utils/polkadotRPC";
 import { postPost } from "@/app/api/getProfile";
+import { toast, useToast } from "@/components/ui/use-toast";
+import { usePrompt } from "./AskPrompt";
 
 const PostPrompt = () => {
   const editor = useSelector((state) => state.default.editor);
@@ -19,13 +21,18 @@ const PostPrompt = () => {
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const provider = useSelector((state) => state.default.provider);
   const loginMethod = useSelector((state) => state.default.loginMethod);
+  const [Prompt, triggerPrompt] = usePrompt();
+  const { toast } = useToast();
 
   const createWeb3PostWallet = async () => {
     const { web3Enable, web3FromAddress } = await import(
       "@polkadot/extension-dapp"
     );
     if (!cover || !title || !editor.getJSON().content[0].content) {
-      window.alert("Cannot keep any field empty");
+      toast({
+        title: "Empty fields",
+        description: "Cannot keep any field empty",
+      });
       return;
     }
     const providerWsURL =
@@ -101,7 +108,10 @@ const PostPrompt = () => {
 
   const createWeb3PostW3A = async () => {
     if (!cover || !title || !editor.getJSON().content[0].content) {
-      window.alert("Cannot keep any field empty");
+      toast({
+        title: "Empty fields",
+        description: "Cannot keep any field empty",
+      });
       return;
     }
     const cidImage = await saveToIPFS(cover);
@@ -162,7 +172,10 @@ const PostPrompt = () => {
 
   const createWeb2Post = async () => {
     if (!cover || !title || !editor.getJSON().content[0].content) {
-      window.alert("Cannot keep any field empty");
+      toast({
+        title: "Empty fields",
+        description: "Cannot keep any field empty",
+      });
       return;
     }
     const cidImage = await saveToIPFS(cover);
@@ -202,7 +215,16 @@ const PostPrompt = () => {
         <div className="flex flex-col space-y-7 ">
           <Button
             className="bg-black relative hover:bg-zinc-800 border-2 group border-zinc-800 h-[200px] w-[400px] p-6 flex justify-between items-start flex-col"
-            onClick={createWeb2Post}
+            onClick={() => {
+              if (!cover || !title || !editor.getJSON().content[0].content) {
+                toast({
+                  title: "Empty fields",
+                  description: "Cannot keep any field empty",
+                });
+                return;
+              }
+              triggerPrompt(createWeb2Post(), 2);
+            }}
           >
             <div className="flex flex-col space-y-1 items-start">
               <h1 className="text-2xl font-semibold tracking-tight text-white">
@@ -223,8 +245,25 @@ const PostPrompt = () => {
           <Button
             className="bg-black relative hover:bg-zinc-800 border-2 group border-zinc-800 h-[200px] w-[400px] p-6 flex justify-between items-start flex-col"
             onClick={() => {
-              if (loginMethod === "email") createWeb3PostW3A();
-              else if (loginMethod === "wallet") createWeb3PostWallet();
+              if (loginMethod === "email") {
+                if (!cover || !title || !editor.getJSON().content[0].content) {
+                  toast({
+                    title: "Empty fields",
+                    description: "Cannot keep any field empty",
+                  });
+                  return;
+                }
+                triggerPrompt(createWeb3PostW3A(), 3);
+              } else if (loginMethod === "wallet") {
+                if (!cover || !title || !editor.getJSON().content[0].content) {
+                  toast({
+                    title: "Empty fields",
+                    description: "Cannot keep any field empty",
+                  });
+                  return;
+                }
+                triggerPrompt(createWeb3PostWallet(), 3);
+              }
             }}
           >
             <div className="flex flex-col space-y-1 items-start">
@@ -244,6 +283,7 @@ const PostPrompt = () => {
           </Button>
         </div>
       </div>
+      <Prompt />
     </div>
   );
 };

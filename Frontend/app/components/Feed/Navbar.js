@@ -100,7 +100,7 @@ const Navbar = () => {
             className="bg-[color:var(--feed-foreground)] hover:bg-zinc-800"
             onClick={() => router.push("/create")}
           >
-            <Pencil className="w-4 mr-2" /> Post
+            <Pencil className="w-4 mr-2" /> Publish
           </Button>
 
           <Button
