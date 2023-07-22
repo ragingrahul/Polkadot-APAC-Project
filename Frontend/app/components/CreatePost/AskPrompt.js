@@ -75,12 +75,12 @@ export function usePrompt() {
                 </>
               )}
               {isLoading && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                <Icons.spinner className="mr-2 h-8 w-8 animate-spin text-white" />
               )}
               {isSucess && (
                 <div className="flex flex-col space-y-1 items-center">
                   <h1 className="text-2xl font-semibold tracking-tight text-white">
-                    <Check className="w-6 h-6 text-white" />
+                    <Check className="w-8 h-8 text-white" />
                   </h1>
                   <p className="text-sm text-muted-foreground">
                     Post Created Sucessfully
