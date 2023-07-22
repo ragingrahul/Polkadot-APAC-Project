@@ -5,6 +5,7 @@ import PostSection from "./PostSection";
 import ThoughtsSection from "./ThoughtsSection";
 import MyProfileSection from "./MyProfileSection";
 import SettingSection from "./SettingSection";
+import NFTSection from "./NFTSection"
 
 const Playground = () => {
   const currentTab = useSelector((state) => state.default.currentTab);
@@ -15,6 +16,7 @@ const Playground = () => {
       {currentTab === "thoughts" && <ThoughtsSection />}
       {currentTab === "myProfile" && <MyProfileSection />}
       {currentTab === "setting" && <SettingSection />}
+      {currentTab === "videos" && <NFTSection />}
     </div>
   );
 };
