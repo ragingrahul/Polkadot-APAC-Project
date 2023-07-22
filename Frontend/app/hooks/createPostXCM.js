@@ -17,6 +17,26 @@ const calculateMintPostCallData = async (address,tokenURI) => {
     return hex
 }
 
+const calculateCallPermitCallData=async()=>{
+    const providerRPC = {
+        moonbase: {
+          name: 'moonbase-alpha',
+          rpc: 'https://rpc.api.moonbase.moonbeam.network',
+          chainId: 1287, // 0x507 in hex,
+        },
+    };
+
+    const provider = new ethers.JsonRpcProvider(providerRPC.moonbase.rpc, {
+        chainId: providerRPC.moonbase.chainId,
+        name: providerRPC.moonbase.name,
+    });
+
+    const privateKey='9b698d2de123c7577755593575c01e7401b7ba8475212e43a648dcac48da6da8'
+    
+    const userSigner=new ethers.Wallet(privateKey,provder)
+    
+}
+
 const moonBeamData = async (contractCall) => {
     const wsProviderAlpha = new WsProvider("wss://wss.api.moonbase.moonbeam.network")
     const apiAlpha = await ApiPromise.create({ provider: wsProviderAlpha })

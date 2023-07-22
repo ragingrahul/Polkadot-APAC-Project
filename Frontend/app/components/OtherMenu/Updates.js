@@ -3,7 +3,7 @@ import React from "react";
 
 const Updates = () => {
   return (
-    <div className="w-full bg-[color:var(--feed-foreground)] text-sm p-5 py-7 text-zinc-400 rounded-2xl">
+    <div className="w-full bg-[color:var(--feed-foreground)] text-sm p-5 mb-3 py-7 text-zinc-400 rounded-2xl">
       <h1 className="text-white text-xl font-bold mx-3">New Features</h1>
       <div className="flex w-full flex-col mt-5 space-y-2">
         <div className="flex w-full">
