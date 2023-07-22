@@ -23,7 +23,7 @@ const UserTab = () => {
         <div className="w-full bg-[color:var(--feed-foreground)] h-[300px] flex flex-col pl-7 pt-7 pr-5 pb-5 text-sm text-zinc-400 justify-between relative rounded-2xl">
           <div className="w-full h-full absolute top-0 left-0 z-0 rounded-2xl bg-transparent">
             <Image
-              src={user[3]}
+              src={"https://" + user[3]}
               width={500}
               height={500}
               className="w-full h-full object-cover rounded-2xl rounded-b-[19px]"

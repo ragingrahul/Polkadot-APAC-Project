@@ -24,8 +24,6 @@ const AlreadyConnected = () => {
   const Login = async () => {
     setIsLoading(true);
     const { web3FromAddress } = await import("@polkadot/extension-dapp");
-    const providerWsURL =
-      "wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network";
     const injector = await web3FromAddress(polkadotAddress);
     const { signature } = await injector.signer.signRaw({
       address: polkadotAddress,
@@ -34,13 +32,8 @@ const AlreadyConnected = () => {
       ),
       type: "bytes",
     });
-    await login(evmAddress, signature);
+    await login(polkadotAddress, evmAddress, signature);
     setIsLoading(false);
-  };
-
-  const verifyLogin = async () => {
-    const res = await checkLogin(polkadotAddress);
-    console.log(res);
   };
 
   const getPro = async () => {
@@ -92,7 +85,8 @@ const AlreadyConnected = () => {
           <Button
             disabled={isLoading}
             className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
-            onClick={() => {
+            onClick={async () => {
+              await Login();
               router.push("/feed");
             }}
           >
