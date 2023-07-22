@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import PolkadotAddress from "./PolkadotAddress";
 import EVMAddress from "./EvmAddress";
 import AlreadyConnected from "./AlreadyConnected";
+import { Toaster } from "@/components/ui/toaster";
 
 const Onboarding_1 = () => {
   const currentStep = useSelector((state) => state.default.onBoardingStep);
@@ -17,6 +18,7 @@ const Onboarding_1 = () => {
       {currentStep === 2 && <PolkadotAddress />}
       {currentStep === 3 && <EVMAddress />}
       {currentStep === 4 && <CreateProfile />}
+      <Toaster />
     </div>
   );
 };

@@ -12,6 +12,7 @@ import { ethers } from "ethers";
 import { getProfile, login, checkLogin } from "@/app/api/getProfile";
 import { WsProvider } from "@polkadot/api";
 import { stringToHex, stringToU8a } from "@polkadot/util";
+import { useToast } from "@/components/ui/use-toast";
 
 const AlreadyConnected = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -20,20 +21,31 @@ const AlreadyConnected = () => {
   const evmAddress = useSelector((state) => state.default.evmAddress);
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const router = useRouter();
+  const { toast } = useToast();
 
   const Login = async () => {
-    setIsLoading(true);
-    const { web3FromAddress } = await import("@polkadot/extension-dapp");
-    const injector = await web3FromAddress(polkadotAddress);
-    const { signature } = await injector.signer.signRaw({
-      address: polkadotAddress,
-      data: stringToHex(
-        "Welcome to DotCom. Please read the terms and conditions before using the service."
-      ),
-      type: "bytes",
-    });
-    await login(polkadotAddress, evmAddress, signature);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const { web3FromAddress } = await import("@polkadot/extension-dapp");
+      const injector = await web3FromAddress(polkadotAddress);
+      const { signature } = await injector.signer.signRaw({
+        address: polkadotAddress,
+        data: stringToHex(
+          "Welcome to DotCom. Please read the terms and conditions before using the service."
+        ),
+        type: "bytes",
+      });
+      await login(polkadotAddress, evmAddress, signature);
+      router.push("/feed");
+    } catch (e) {
+      console.log(e);
+      toast({
+        title: "Unauthorized",
+        description: "Kindly sign the message to continue.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getPro = async () => {
@@ -87,7 +99,6 @@ const AlreadyConnected = () => {
             className="bg-white text-black hover:bg-gray-300 hover:text-black w-[300px]"
             onClick={async () => {
               await Login();
-              router.push("/feed");
             }}
           >
             {isLoading && (
