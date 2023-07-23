@@ -27,10 +27,16 @@ npx hardhat compile
 npx thirdweb deploy
 ```
 
-## Run the project by running the following command in both Backend and Frontend 
+## Run the Frontend project
 
 ```
 npm run dev
+```
+
+## Run the Backend project
+
+```
+npm run server
 ```
 
 ## Screenshots of the project
