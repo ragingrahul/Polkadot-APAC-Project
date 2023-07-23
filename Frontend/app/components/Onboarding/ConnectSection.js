@@ -6,64 +6,63 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { useDispatch,useSelector } from "react-redux";
-import {
-  initiateOnboarding,
-  setLoginMethod
-} from "@/redux/defaultSlice";
-import { useWeb3Auth,useWallet } from "@/app/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { initiateOnboarding, setLoginMethod } from "@/redux/defaultSlice";
+import { useWeb3Auth, useWallet } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
 import { Wallet2 } from "lucide-react";
-
-
+import { useToast } from "@/components/ui/use-toast";
 
 const ConnectSection = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(true);
-  const [email, setEmail] = React.useState();
+  const [email, setEmail] = React.useState("");
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
-  const {initializeWeb3Auth,loginWithEmail,logout}=useWeb3Auth()
-  const {connectWallet,sign}=useWallet()
+  const { initializeWeb3Auth, loginWithEmail, logout } = useWeb3Auth();
+  const { connectWallet, sign } = useWallet();
+  const { toast } = useToast();
 
-  const callInitializeWeb3Auth=async()=>{
-    await initializeWeb3Auth()
-    setIsLoading(false)
-  }
-  React.useEffect(()=>{
-    
-    callInitializeWeb3Auth()
-    
-  },[polkadotAddress])
-  
+  const callInitializeWeb3Auth = async () => {
+    await initializeWeb3Auth();
+    setIsLoading(false);
+  };
+  React.useEffect(() => {
+    callInitializeWeb3Auth();
+  }, [polkadotAddress]);
 
   //Implementing loginWithEmail Hook
-  const emailLogin=async()=>{
+  const emailLogin = async () => {
+    if (!email || email.length === 0) {
+      toast({
+        title: "Empty Email",
+        description: "Please enter a valid email address",
+      });
+      return;
+    }
     try {
-      setIsLoading(true)
-      await loginWithEmail({email:email})
-      dispatch(setLoginMethod("email"))
+      setIsLoading(true);
+      await loginWithEmail({ email: email });
+      dispatch(setLoginMethod("email"));
       dispatch(initiateOnboarding());
     } catch (error) {
-      console.error(error)
-    }finally{
-      setIsLoading(false)
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   //Implementing login with polkadot extension wallet
-  const walletLogin=async()=>{
-    try{
-      
-      const address= await connectWallet()
-      console.log(address)
-      dispatch(setLoginMethod("wallet"))
+  const walletLogin = async () => {
+    try {
+      const address = await connectWallet();
+      console.log(address);
+      dispatch(setLoginMethod("wallet"));
       dispatch(initiateOnboarding());
-    }catch(error){
-      console.error(error)
+    } catch (error) {
+      console.error(error);
     }
-  }
-  
-  
+  };
+
   return (
     <div className="relative bg-black">
       {/* Connect Section */}
@@ -134,7 +133,7 @@ const ConnectSection = () => {
           )) || <Wallet2 size={14} className="mr-2 h-4 w-4" />}
           Connect
         </Button>
-        
+
         <p className="px-8 text-center text-sm text-muted-foreground">
           By connecting your wallet, you agree to our{" "}
           <Link

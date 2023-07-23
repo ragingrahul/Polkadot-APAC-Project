@@ -95,7 +95,7 @@ const PostPlayground = () => {
         value={title}
         onChange={(e) => dispatch(setTitle(e.target.value))}
         placeholder="Title..."
-        className=" focus:outline-none text-white text-5xl mt-5 font-bold bg-transparent"
+        className=" focus:outline-none w-full text-white text-5xl mt-5 font-bold bg-transparent"
       />
 
       {/* Main Editor */}

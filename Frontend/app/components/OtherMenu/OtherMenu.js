@@ -8,10 +8,10 @@ import Advertisement from "./Advertisements";
 const OtherMenu = () => {
   const currentTab = useSelector((state) => state.default.currentTab);
   return (
-    <div className="w-[400px] fixed mt-24 ml-[1075px] h-[200px] ">
+    <div className="w-[400px] fixed mt-24 ml-[1075px] flex flex-col items-center justify-center space-y-2">
       {(currentTab === "feed" || currentTab === "updates") && <Updates />}
       {currentTab === "myProfile" && <ProfileStats />}
-      {currentTab === 'feed' && <Charts />}
+      {currentTab === "feed" && <Charts />}
     </div>
   );
 };
