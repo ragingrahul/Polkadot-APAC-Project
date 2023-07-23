@@ -13,7 +13,7 @@ const page = () => {
       <Sidebar />
       <Navbar />
       <OtherMenu />
-      <Advertisement />
+      
     </div>
   );
 };
