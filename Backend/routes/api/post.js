@@ -7,7 +7,7 @@ const { ethers, JsonRpcProvider } = require("ethers");
 const Post = require("../../models/posts");
 const User = require("../../models/users");
 
-const dotComPostAddress = "0x5cfd2c52F1224cca3cfFd2a49eA37423F48c8fB8";
+const dotComPostAddress = "0x6f922CA8755E6398C3e9d21b8f3487b6Cc3d9160";
 let ABI = [
   "function _tokenIds() public view returns(uint256)",
   "function tokenURI(uint256) public view returns(string)",
