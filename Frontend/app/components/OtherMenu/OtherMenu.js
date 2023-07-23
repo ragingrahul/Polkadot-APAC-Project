@@ -3,6 +3,7 @@ import Updates from "./Updates";
 import { useSelector } from "react-redux";
 import ProfileStats from "./ProfileStats";
 import Charts from "./Charts";
+import Advertisement from "./Advertisements";
 
 const OtherMenu = () => {
   const currentTab = useSelector((state) => state.default.currentTab);
