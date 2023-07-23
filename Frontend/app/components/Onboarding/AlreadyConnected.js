@@ -6,7 +6,10 @@ import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Router, Wallet2 } from "lucide-react";
-import { nextOnboardingStep } from "@/redux/defaultSlice";
+import {
+  nextOnboardingStep,
+  previousOnboardingStep,
+} from "@/redux/defaultSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ethers } from "ethers";
 import { getProfile, login, checkLogin } from "@/app/api/getProfile";
@@ -142,7 +145,10 @@ const AlreadyConnected = () => {
                 buttonVariants({ variant: "outline" }),
                 "bg-transparent text-white hover:bg-zinc-900 hover:text-white w-[300px]"
               )}
-              onClick={logout}
+              onClick={() => {
+                logout();
+                dispatch(previousOnboardingStep());
+              }}
             >
               {(isLoading && (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
