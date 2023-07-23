@@ -23,7 +23,7 @@ router.get("/web3/all", async (req, res) => {
     const tokenId = await contract._tokenIds();
     const URIs = [];
     for (i = 1; i <= tokenId; i++) {
-      const metaDataLink = await contract.tokenURI(tokenId);
+      const metaDataLink = await contract.tokenURI(i);
       URIs.push(metaDataLink);
     }
     const web3Posts = URIs;

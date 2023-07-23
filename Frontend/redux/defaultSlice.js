@@ -11,7 +11,7 @@ const initialState = {
   editor: null,
   cover: null,
   title: "",
-  loginMethod:"",
+  loginMethod: "",
 };
 
 export const defaultSlice = createSlice({
@@ -59,9 +59,9 @@ export const defaultSlice = createSlice({
     setCover: (state, action) => {
       state.cover = action.payload;
     },
-    setLoginMethod:(state,action)=>{
-      state.loginMethod=action.payload;
-    }
+    setLoginMethod: (state, action) => {
+      state.loginMethod = action.payload;
+    },
   },
 });
 
@@ -79,5 +79,5 @@ export const {
   setEditor,
   setTitle,
   setCover,
-  setLoginMethod
+  setLoginMethod,
 } = defaultSlice.actions;
