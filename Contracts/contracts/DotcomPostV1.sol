@@ -11,7 +11,7 @@ contract dotComPost is ERC721URIStorage,Ownable{
     using Counters for Counters.Counter;
 
     uint256 public _tokenIds=0;
-    uint256 public postPrice=1000000000000000000;
+    uint256 public postPrice=100000000000000000;
 
     constructor() ERC721("dotCom","DTC"){}
 
