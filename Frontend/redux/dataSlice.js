@@ -27,7 +27,7 @@ export const fetchUser = createAsyncThunk("data/fetchUser", async (address) => {
   }
 });
 
-//
+//Fetch LoggedInUser
 export const fetchLoggedInUser = createAsyncThunk(
   "data/fetchLoggedInUser",
   async (address) => {
@@ -49,7 +49,6 @@ export const fetchAlldata = createAsyncThunk("data/fetchAlldata", async () => {
     const posts = await axios.get("https://dotcombackend.me/api/post/web3/all");
     const web2post = await axios.get("https://dotcombackend.me/api/post/all");
     var uriJson = [];
-    console.log(posts.data[0]);
     await Promise.all(
       posts.data.map(async (post) => {
         const uri = await axios.get(`https://` + post);
@@ -78,7 +77,20 @@ export const fetchAllUserData = createAsyncThunk(
       const thoughts = await axios.get(
         `https://dotcombackend.me/api/thought/user/${address}`
       );
-      const res = posts.data.concat(thoughts.data);
+      const web3posts = await axios.get(
+        "https://dotcombackend.me/api/post/web3/all"
+      );
+      var uriJson = [];
+      await Promise.all(
+        web3posts.data.map(async (post) => {
+          const uri = await axios.get(`https://` + post);
+          uriJson.push(uri.data);
+        })
+      );
+      const filteredPost = uriJson.filter((post) => {
+        return post.properties.evmAddress.description === address;
+      });
+      const res = posts.data.concat(thoughts.data.concat(filteredPost));
       return res;
     } catch {
       console.log(error);
@@ -101,18 +113,20 @@ export const fetchAllPosts = createAsyncThunk(
   }
 );
 
-export const fetchAllWeb3Posts=createAsyncThunk(
+export const fetchAllWeb3Posts = createAsyncThunk(
   "data/fetchAllWeb3Posts",
-  async()=>{
+  async () => {
     try {
-      const posts = await axios.get("https://dotcombackend.me/api/post/web3/all");
-      return posts.data
+      const posts = await axios.get(
+        "https://dotcombackend.me/api/post/web3/all"
+      );
+      return posts.data;
     } catch {
       console.log(error);
       throw Error(error);
     }
   }
-)
+);
 
 //Fetch all thoughts
 export const fetchAllThoughts = createAsyncThunk(
