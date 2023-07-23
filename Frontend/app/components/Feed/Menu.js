@@ -3,7 +3,7 @@ import MenuButton from "./MenuButton";
 import {
   BookMarked,
   Home,
-  Play,
+  Box,
   Repeat2,
   Settings,
   UserCircle2,
@@ -49,7 +49,7 @@ const Menu = () => {
         OnClick={() => dispatch(setCurrentTab("posts"))}
       />
       <MenuButton
-        icon={Play}
+        icon={Box}
         name="NFT"
         isActive={currentTab == "videos"}
         OnClick={() => dispatch(setCurrentTab("videos"))}

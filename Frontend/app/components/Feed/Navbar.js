@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Settings,
   Activity,
-  Play,
+  Box,
   Repeat2,
   Search,
   Pencil,
@@ -79,7 +79,7 @@ const Navbar = () => {
           {/* Videos Button */}
           <NavButton
             name="NFT"
-            icon={Play}
+            icon={Box}
             isActive={currentTab === "videos"}
             OnClick={() => dispatch(setCurrentTab("videos"))}
           />

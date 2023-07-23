@@ -78,62 +78,92 @@ const CreateProfile = () => {
   };
 
   const createProfile = async () => {
-    const { web3Enable, web3FromAddress } = await import(
-      "@polkadot/extension-dapp"
-    );
-    if (!name || !bio || !date || !avatar) window.alert("Fill all fields");
-    else {
-      const cid = await saveToIPFS(avatar);
-      const unixDate = parseInt(date.getTime() / 1000);
-      const providerWsURL =
-        "wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network";
-      const substrateProvider = new WsProvider(providerWsURL);
-      const api = await ApiPromise.create({ provider: substrateProvider });
-      const xcmCallData = await initializeUser(
-        evmAddress,
-        name,
-        cid,
-        bio,
-        unixDate
+    try {
+      setIsLoading(true);
+      const { web3Enable, web3FromAddress } = await import(
+        "@polkadot/extension-dapp"
       );
-      const extension = await web3Enable("dotUser");
-      const injector = await web3FromAddress(polkadotAddress);
-
-      const tx = await api
-        .tx(xcmCallData)
-        .signAndSend(
-          polkadotAddress,
-          { signer: injector.signer },
-          ({ result }) => {
-            console.log(`Transaction Sent`);
-            if (result.status.isInBlock) {
-              console.log(
-                `Transaction include in blockhash ${result.status.asInBlock}`
-              );
-            }
-          }
+      if (!name || !bio || !date || !avatar) {
+        toast({
+          title: "Empty fields",
+          description: "Please fill the required field ",
+        });
+        return;
+      } else {
+        const cid = await saveToIPFS(avatar);
+        const unixDate = parseInt(date.getTime() / 1000);
+        const providerWsURL =
+          "wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network";
+        const substrateProvider = new WsProvider(providerWsURL);
+        const api = await ApiPromise.create({ provider: substrateProvider });
+        const xcmCallData = await initializeUser(
+          evmAddress,
+          name,
+          cid,
+          bio,
+          unixDate
         );
+        const extension = await web3Enable("dotUser");
+        const injector = await web3FromAddress(polkadotAddress);
+
+        const tx = await api
+          .tx(xcmCallData)
+          .signAndSend(
+            polkadotAddress,
+            { signer: injector.signer },
+            ({ result }) => {
+              console.log(`Transaction Sent`);
+              if (result.status.isInBlock) {
+                console.log(
+                  `Transaction include in blockhash ${result.status.asInBlock}`
+                );
+              }
+            }
+          );
+      }
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const createProfileWithWeb3Auth = async () => {
-    if (!name || !bio || !date || !avatar) window.alert("Fill all fields");
-    else {
-      const cid = await saveToIPFS(avatar);
-      const unixDate = parseInt(date.getTime() / 1000);
-      const xcmCallData = await initializeUser(
-        evmAddress,
-        name,
-        cid,
-        bio,
-        unixDate
-      );
-      console.log(xcmCallData);
-      const rpc = new RPC(provider);
-      const keyPair = await rpc.getPolkadotKeyPair();
-      const api = await rpc.makeClient();
-      const tx = await api.tx(xcmCallData).signAndSend(keyPair);
-      console.log(tx);
+    try {
+      setIsLoading(true);
+      if (!name || !bio || !date || !avatar) {
+        toast({
+          title: "Empty fields",
+          description: "Please fill the required field ",
+        });
+        return;
+      } else {
+        const cid = await saveToIPFS(avatar);
+        const unixDate = parseInt(date.getTime() / 1000);
+        const xcmCallData = await initializeUser(
+          evmAddress,
+          name,
+          cid,
+          bio,
+          unixDate
+        );
+        console.log(xcmCallData);
+        const rpc = new RPC(provider);
+        const keyPair = await rpc.getPolkadotKeyPair();
+        const api = await rpc.makeClient();
+        const tx = await api.tx(xcmCallData).signAndSend(keyPair);
+        console.log(tx);
+      }
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
