@@ -8,12 +8,13 @@ import { buttonVariants } from "@/components/ui/button";
 import { Router, Wallet2 } from "lucide-react";
 import { nextOnboardingStep } from "@/redux/defaultSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { ethers } from "ethers";
 import { getProfile, login, checkLogin } from "@/app/api/getProfile";
-import { WsProvider } from "@polkadot/api";
-import { stringToHex, stringToU8a } from "@polkadot/util";
+import { stringToHex, stringToU8a,u8aToHex,} from "@polkadot/util";
 import { useToast } from "@/components/ui/use-toast";
 import { useWeb3Auth } from "@/app/hooks";
+import { signatureVerify } from "@polkadot/util-crypto";
+import RPC from "../../../utils/polkadotRPC"
+
 
 const AlreadyConnected = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -23,23 +24,34 @@ const AlreadyConnected = () => {
   const evmAddress = useSelector((state) => state.default.evmAddress);
   const polkadotAddress = useSelector((state) => state.default.polkadotAddress);
   const router = useRouter();
+  const provider=useSelector((state)=>state.default.provider)
   const { toast } = useToast();
   const { logout } = useWeb3Auth();
 
   const Login = async () => {
     try {
       setIsLoading(true);
-      const { web3FromAddress } = await import("@polkadot/extension-dapp");
-      const injector = await web3FromAddress(polkadotAddress);
-      const { signature } = await injector.signer.signRaw({
-        address: polkadotAddress,
-        data: stringToHex(
-          "Welcome to DotCom. Please read the terms and conditions before using the service."
-        ),
-        type: "bytes",
-      });
-      await login(polkadotAddress, evmAddress, signature);
-      router.push("/feed");
+      if (loginMethod === "wallet") {
+        const { web3FromAddress } = await import("@polkadot/extension-dapp");
+        const injector = await web3FromAddress(polkadotAddress);
+        const { signature } = await injector.signer.signRaw({
+          address: polkadotAddress,
+          data: stringToHex(
+            "Welcome to DotCom. Please read the terms and conditions before using the service."
+          ),
+          type: "bytes",
+        });
+        await login(polkadotAddress, evmAddress, signature);
+      }else{
+        if(!provider)return
+        const hexData=stringToHex("Welcome to DotCom. Please read the terms and conditions before using the service.")
+        const rpc=new RPC(provider)
+        const keyPair=await rpc.getPolkadotKeyPair()
+        const signature=keyPair.sign(hexData)
+        const message=u8aToHex(signature)
+        await login(polkadotAddress,evmAddress,message)
+      }
+       router.push("/feed");
     } catch (e) {
       console.log(e);
       toast({

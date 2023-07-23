@@ -46,16 +46,26 @@ const CreateProfile = () => {
   const Login = async () => {
     try {
       setIsLoading(true);
-      const { web3FromAddress } = await import("@polkadot/extension-dapp");
-      const injector = await web3FromAddress(polkadotAddress);
-      const { signature } = await injector.signer.signRaw({
-        address: polkadotAddress,
-        data: stringToHex(
-          "Welcome to DotCom. Please read the terms and conditions before using the service."
-        ),
-        type: "bytes",
-      });
-      await login(polkadotAddress, evmAddress, signature);
+      if (loginMethod === "wallet") {
+        const { web3FromAddress } = await import("@polkadot/extension-dapp");
+        const injector = await web3FromAddress(polkadotAddress);
+        const { signature } = await injector.signer.signRaw({
+          address: polkadotAddress,
+          data: stringToHex(
+            "Welcome to DotCom. Please read the terms and conditions before using the service."
+          ),
+          type: "bytes",
+        });
+        await login(polkadotAddress, evmAddress, signature);
+      }else{
+        if(!provider)return
+        const hexData=stringToHex("Welcome to DotCom. Please read the terms and conditions before using the service.")
+        const rpc=new RPC(provider)
+        const keyPair=await rpc.getPolkadotKeyPair()
+        const signature=keyPair.sign(hexData)
+        const message=u8aToHex(signature)
+        await login(polkadotAddress,evmAddress,message)
+      }
       router.push("/feed");
     } catch (e) {
       toast({
